@@ -191,7 +191,7 @@ export default function Customize() {
             <div className="relative aspect-[390/844] w-[300px] overflow-hidden rounded-[38px] bg-white shadow-xl">
               <div className="absolute left-1/2 top-0 h-6 w-40 -translate-x-1/2 rounded-b-2xl bg-black"></div>
               <Image
-                src="/placeholder.svg"
+                src="https://484zd26nhzbahsul.public.blob.vercel-storage.com/Frame%20184695%20(1)-DvhLQIiW7FROdvr4vzqdPABShYal7v.svg"
                 alt="Template preview"
                 width={300}
                 height={650}

@@ -12,7 +12,6 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
 } from "@/components/ui/dialog"
 
@@ -185,47 +184,41 @@ export default function HowItLooks() {
 
       {/* Template Preview Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogOverlay className="bg-black/60 backdrop-blur-sm" />
-        <DialogContent className="max-w-md mx-auto p-4 sm:p-6 gap-4 rounded-lg w-[calc(100%-2rem)] sm:w-full animate-in fade-in-50 slide-in-from-bottom-5">
-          <DialogHeader className="space-y-2">
-            <DialogTitle className="text-xl font-semibold">
-              {selectedTemplate?.name}
-            </DialogTitle>
-            <p className="text-sm text-muted-foreground">
-              Preview the template before applying it to your campaign
-            </p>
-          </DialogHeader>
+        <DialogContent className="max-w-[320px] w-[calc(100%-2rem)] sm:w-full bg-gray-900/95 border-0 p-6">
+          <div className="bg-white rounded-xl overflow-hidden flex flex-col">
+            <DialogHeader className="p-4 space-y-1">
+              <DialogTitle className="text-base font-semibold">
+                {selectedTemplate?.name}
+              </DialogTitle>
+              <p className="text-xs text-muted-foreground">
+                Preview template
+              </p>
+            </DialogHeader>
 
-          {/* Template Preview */}
-          <div className="relative mt-4 overflow-hidden rounded-lg border bg-background">
-            <div className="aspect-[390/844] w-full">
-              {selectedTemplate && (
-                <Image
-                  src={selectedTemplate.previewImage}
-                  alt={`${selectedTemplate.name} preview`}
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              )}
+            {/* Template Preview */}
+            <div className="relative overflow-hidden bg-background border-2 border-gray-200 m-4 rounded-xl">
+              <div className="aspect-[390/844] w-full">
+                {selectedTemplate && (
+                  <Image
+                    src={selectedTemplate.previewImage}
+                    alt={`${selectedTemplate.name} preview`}
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Actions */}
-          <div className="flex flex-col gap-3 mt-4">
-            <Button 
-              onClick={handleUseTemplate}
-              className="w-full bg-gray-900 hover:bg-gray-800 text-white"
-            >
-              Use Template
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setIsModalOpen(false)}
-              className="w-full"
-            >
-              Cancel
-            </Button>
+            {/* Actions */}
+            <div className="p-4">
+              <Button 
+                onClick={handleUseTemplate}
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white"
+              >
+                Use Template →
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
