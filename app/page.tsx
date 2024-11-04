@@ -33,33 +33,44 @@ import {
 } from "lucide-react"
 import { useCampaignStore } from "@/lib/campaign-store"
 import { LoadingSpinner } from "@/components/loading-spinner"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function HomePage() {
   const router = useRouter()
   const [isCreating, setIsCreating] = useState(false)
+  const [isReady, setIsReady] = useState(false)
   const { campaigns, addCampaign, setCampaignName } = useCampaignStore()
+
+  useEffect(() => {
+    // Let the initial render complete before showing content
+    setIsReady(true)
+  }, [])
 
   const handleCreateCampaign = async () => {
     setIsCreating(true)
+    setIsReady(false) // Prevent content flash
     const defaultName = `Campaign #${campaigns.length + 1}`
-    
-    // Set campaign name first
+
+    // Set campaign name and add campaign
     setCampaignName(defaultName)
-    
-    // Navigate immediately
+    addCampaign(defaultName)
+
+    // Navigate after store updates
     router.push('/campaign-builder')
-    
-    // Update store in the background
-    setTimeout(() => {
-      addCampaign(defaultName)
-      setIsCreating(false)
-    }, 0)
+  }
+
+  // Show loading spinner while creating
+  if (isCreating) {
+    return <LoadingSpinner isLoading={true} />
+  }
+
+  // Don't render content until ready
+  if (!isReady) {
+    return null
   }
 
   return (
     <SidebarProvider>
-      <LoadingSpinner isLoading={isCreating} />
       <div className="flex h-screen">
         <Sidebar className="w-64 border-r">
           <SidebarHeader className="flex h-[60px] items-center justify-start border-b px-4">
