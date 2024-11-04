@@ -155,22 +155,21 @@ export default function RewardsPage() {
               </Select>
             </div>
           </div>
-          <div>
-            <Label>Payout Limit</Label>
-            <Input
-              type="number"
-              placeholder="10"
-              value={config.limit}
-              onChange={(e) => {
-                if (isInvitee) {
-                  setInviteePayout({ ...config, limit: e.target.value })
-                } else {
+          {/* Only show payout limit for referrers */}
+          {!isInvitee && (
+            <div>
+              <Label>Payout Limit</Label>
+              <Input
+                type="number"
+                placeholder="10"
+                value={config.limit}
+                onChange={(e) => {
                   setReferrerPayout({ ...config, limit: e.target.value })
-                }
-              }}
-              className="mt-1.5"
-            />
-          </div>
+                }}
+                className="mt-1.5"
+              />
+            </div>
+          )}
         </div>
       )
     }
@@ -183,42 +182,42 @@ export default function RewardsPage() {
       <div className="relative mx-auto max-w-3xl p-6">
         <div className="space-y-6">
           <div>
-            <h1 className="text-2xl font-semibold">Rewards</h1>
+            <h1 className="text-2xl font-semibold">Set up your rewards</h1>
             <p className="mt-2 text-gray-600">
-              Configure your reward strategy - choose when rewards are triggered and how they're delivered to both referrers and their friends.
+              Choose when and how to reward both referrers and their invited friends.
             </p>
           </div>
 
           <Card className="p-6">
             <div className="space-y-6">
               <div>
-                <h2 className="text-lg font-medium">Reward Trigger</h2>
+                <h2 className="text-lg font-medium">When do people get rewarded?</h2>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <TriggerButton
                     value="new-user"
                     selected={rewardTrigger === 'new-user'}
                     onClick={() => setRewardTrigger('new-user')}
                   >
-                    New User Signup
+                    New user signup
                   </TriggerButton>
                   <TriggerButton
                     value="subscription"
                     selected={rewardTrigger === 'subscription'}
                     onClick={() => setRewardTrigger('subscription')}
                   >
-                    Subscription Signup
+                    Subscription signup
                   </TriggerButton>
                   <TriggerButton
                     value="custom"
                     selected={rewardTrigger === 'custom'}
                     onClick={() => setRewardTrigger('custom')}
                   >
-                    Custom
+                    Custom milestone
                   </TriggerButton>
                 </div>
                 {rewardTrigger === 'custom' && (
                   <div className="mt-4">
-                    <Label>Custom Event Name</Label>
+                    <Label>Custom event name</Label>
                     <Input
                       type="text"
                       placeholder="Enter custom event name"
@@ -233,9 +232,8 @@ export default function RewardsPage() {
               <div className="h-px bg-gray-200" />
 
               <div>
-                <h2 className="text-lg font-medium">Referrer Reward</h2>
-                <div className="mt-4">
-                  <Label className="text-sm text-gray-600">Payout Method</Label>
+                <h2 className="text-lg font-medium">Referrer reward</h2>
+                <div className="mt-4">                
                   <div className="mt-4 flex flex-wrap gap-2">
                     <TriggerButton
                       value="stripe"
@@ -256,14 +254,14 @@ export default function RewardsPage() {
                       selected={referrerPayout.method === 'amazon'}
                       onClick={() => setReferrerPayout({ method: 'amazon' })}
                     >
-                      Amazon Gift Card
+                      Amazon gift card
                     </TriggerButton>
                     <TriggerButton
                       value="none"
                       selected={referrerPayout.method === 'none'}
                       onClick={() => setReferrerPayout({ method: 'none' })}
                     >
-                      None
+                      No reward
                     </TriggerButton>
                   </div>
                   {renderPayoutFields(referrerPayout, false)}
@@ -273,9 +271,8 @@ export default function RewardsPage() {
               <div className="h-px bg-gray-200" />
 
               <div>
-                <h2 className="text-lg font-medium">Invitee Reward</h2>
+                <h2 className="text-lg font-medium">Invitee reward</h2>
                 <div className="mt-4">
-                  <Label className="text-sm text-gray-600">Payout Method</Label>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <TriggerButton
                       value="stripe"
@@ -296,14 +293,14 @@ export default function RewardsPage() {
                       selected={inviteePayout.method === 'amazon'}
                       onClick={() => setInviteePayout({ method: 'amazon' })}
                     >
-                      Amazon Gift Card
+                      Amazon gift card
                     </TriggerButton>
                     <TriggerButton
                       value="none"
                       selected={inviteePayout.method === 'none'}
                       onClick={() => setInviteePayout({ method: 'none' })}
                     >
-                      None
+                      No reward
                     </TriggerButton>
                   </div>
                   {renderPayoutFields(inviteePayout, true)}

@@ -138,7 +138,7 @@ export default function HomePage() {
               />
               <h1 className="text-2xl font-semibold tracking-tight">Welcome to Flock</h1>
               <p className="text-center text-muted-foreground">
-                Get started by building your first referral campaign in minutes
+                Get started by building your first referral campaign in minutes.
               </p>
               <Button 
                 className="mt-4 bg-emerald-600 hover:bg-emerald-600/90"
