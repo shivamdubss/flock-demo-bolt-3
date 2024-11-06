@@ -1,12 +1,17 @@
 'use client'
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import * as React from "react"
 import { CampaignLayout } from "@/components/campaign-layout"
+import { Info, Check } from "lucide-react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -14,307 +19,258 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { cn } from "@/lib/utils"
-
-interface PayoutConfig {
-  method: 'stripe' | 'paypal' | 'amazon' | 'none'
-  amount?: string
-  currency?: string
-  limit?: string
-  discountPercent?: string
-  discountDuration?: string
-  discountLimit?: string
-}
-
-interface TriggerButtonProps {
-  value: string
-  selected: boolean
-  onClick: () => void
-  children: React.ReactNode
-}
-
-const TriggerButton = ({ value, selected, onClick, children }: TriggerButtonProps) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className={cn(
-      "rounded-full px-6 py-2.5 text-sm font-medium transition-colors",
-      selected ? "bg-[#4B4B4B] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-    )}
-  >
-    {children}
-  </button>
-)
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { Progress } from "@/components/ui/progress"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import Link from "next/link"
 
 export default function RewardsPage() {
-  const [rewardTrigger, setRewardTrigger] = useState<'new-user' | 'subscription' | 'custom'>('new-user')
-  const [customEventName, setCustomEventName] = useState("")
-  const [referrerPayout, setReferrerPayout] = useState<PayoutConfig>({ method: 'none' })
-  const [inviteePayout, setInviteePayout] = useState<PayoutConfig>({ method: 'none' })
+  const [currentStep, setCurrentStep] = React.useState(1)
+  const [rewardTrigger, setRewardTrigger] = React.useState("new-user")
+  const [referrerMethod, setReferrerMethod] = React.useState("stripe")
+  const [referrerAmount, setReferrerAmount] = React.useState("10")
+  const [inviteeMethod, setInviteeMethod] = React.useState("stripe")
+  const [inviteeAmount, setInviteeAmount] = React.useState("5")
+  const [customTrigger, setCustomTrigger] = React.useState("")
+  const [limitEnabled, setLimitEnabled] = React.useState(false)
+  const [rewardLimit, setRewardLimit] = React.useState("100")
 
-  const currencies = ['USD', 'EUR', 'GBP', 'AUD', 'CAD']
-
-  const renderPayoutFields = (config: PayoutConfig, isInvitee: boolean) => {
-    if (config.method === 'none') return null
-
-    if (config.method === 'stripe') {
-      return (
-        <div className="mt-4 space-y-4">
-          <div>
-            <Label>Discount %</Label>
-            <Input
-              type="number"
-              placeholder="20"
-              value={config.discountPercent}
-              onChange={(e) => {
-                if (isInvitee) {
-                  setInviteePayout({ ...config, discountPercent: e.target.value })
-                } else {
-                  setReferrerPayout({ ...config, discountPercent: e.target.value })
-                }
-              }}
-              className="mt-1.5"
-            />
-          </div>
-          <div>
-            <Label>Discount Duration (months)</Label>
-            <Input
-              type="number"
-              placeholder="3"
-              value={config.discountDuration}
-              onChange={(e) => {
-                if (isInvitee) {
-                  setInviteePayout({ ...config, discountDuration: e.target.value })
-                } else {
-                  setReferrerPayout({ ...config, discountDuration: e.target.value })
-                }
-              }}
-              className="mt-1.5"
-            />
-          </div>
-          {!isInvitee && (
-            <div>
-              <Label>Discount Limit</Label>
-              <Input
-                type="number"
-                placeholder="5"
-                value={config.discountLimit}
-                onChange={(e) => {
-                  setReferrerPayout({ ...config, discountLimit: e.target.value })
-                }}
-                className="mt-1.5"
-              />
-            </div>
-          )}
-        </div>
-      )
-    }
-
-    if (config.method === 'paypal' || config.method === 'amazon') {
-      return (
-        <div className="mt-4 space-y-4">
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <Label>One-time Payout</Label>
-              <Input
-                type="number"
-                placeholder="75"
-                value={config.amount}
-                onChange={(e) => {
-                  if (isInvitee) {
-                    setInviteePayout({ ...config, amount: e.target.value })
-                  } else {
-                    setReferrerPayout({ ...config, amount: e.target.value })
-                  }
-                }}
-                className="mt-1.5"
-              />
-            </div>
-            <div className="w-24">
-              <Label>&nbsp;</Label>
-              <Select
-                value={config.currency}
-                onValueChange={(value) => {
-                  if (isInvitee) {
-                    setInviteePayout({ ...config, currency: value })
-                  } else {
-                    setReferrerPayout({ ...config, currency: value })
-                  }
-                }}
-              >
-                <SelectTrigger className="mt-1.5">
-                  <SelectValue placeholder="USD" />
-                </SelectTrigger>
-                <SelectContent>
-                  {currencies.map((currency) => (
-                    <SelectItem key={currency} value={currency}>
-                      {currency}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          {/* Only show payout limit for referrers */}
-          {!isInvitee && (
-            <div>
-              <Label>Payout Limit</Label>
-              <Input
-                type="number"
-                placeholder="10"
-                value={config.limit}
-                onChange={(e) => {
-                  setReferrerPayout({ ...config, limit: e.target.value })
-                }}
-                className="mt-1.5"
-              />
-            </div>
-          )}
-        </div>
-      )
-    }
-
-    return null
-  }
+  const progress = (currentStep / 3) * 100
 
   return (
     <CampaignLayout currentStep="rewards">
-      <div className="relative mx-auto max-w-3xl p-6">
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-2xl font-semibold">Set up your rewards</h1>
-            <p className="mt-2 text-gray-600">
-              Choose when and how to reward both referrers and their invited friends.
-            </p>
-          </div>
+      <div className="mx-auto max-w-4xl p-6">
+        <div className="mb-8">
+          <h1 className="text-2xl font-semibold">Rewards Configuration</h1>
+          <p className="mt-2 text-gray-600">
+            Set up your reward strategy by configuring when rewards are triggered and how they're delivered.
+          </p>
+        </div>
 
-          <Card className="p-6">
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-lg font-medium">When do people get rewarded?</h2>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <TriggerButton
-                    value="new-user"
-                    selected={rewardTrigger === 'new-user'}
-                    onClick={() => setRewardTrigger('new-user')}
-                  >
-                    New user signup
-                  </TriggerButton>
-                  <TriggerButton
-                    value="subscription"
-                    selected={rewardTrigger === 'subscription'}
-                    onClick={() => setRewardTrigger('subscription')}
-                  >
-                    Subscription signup
-                  </TriggerButton>
-                  <TriggerButton
-                    value="custom"
-                    selected={rewardTrigger === 'custom'}
-                    onClick={() => setRewardTrigger('custom')}
-                  >
-                    Custom milestone
-                  </TriggerButton>
+        <div className="mb-6">
+          <Progress value={progress} className="h-2" />
+          <div className="mt-2 flex justify-between text-sm text-gray-600">
+            <span>Trigger Setup</span>
+            <span>Referrer Rewards</span>
+            <span>Invitee Rewards</span>
+          </div>
+        </div>
+
+        {currentStep === 1 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>When should rewards be triggered?</CardTitle>
+              <CardDescription>
+                Choose the event that will trigger rewards for both referrers and invitees
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <Button
+                  variant="outline"
+                  className={`h-auto w-full flex-col items-start p-4 ${
+                    rewardTrigger === "new-user" ? "border-primary text-primary" : ""
+                  }`}
+                  onClick={() => setRewardTrigger("new-user")}
+                >
+                  <div className="flex w-full items-center justify-between">
+                    <span className="font-semibold">New User Signup</span>
+                    {rewardTrigger === "new-user" && <Check className="h-4 w-4" />}
+                  </div>
+                  <p className="mt-1 text-left text-sm text-muted-foreground">
+                    Reward is triggered when an invited user creates an account
+                  </p>
+                </Button>
+                <Button
+                  variant="outline"
+                  className={`h-auto w-full flex-col items-start p-4 ${
+                    rewardTrigger === "subscription" ? "border-primary text-primary" : ""
+                  }`}
+                  onClick={() => setRewardTrigger("subscription")}
+                >
+                  <div className="flex w-full items-center justify-between">
+                    <span className="font-semibold">Subscription Signup</span>
+                    {rewardTrigger === "subscription" && <Check className="h-4 w-4" />}
+                  </div>
+                  <p className="mt-1 text-left text-sm text-muted-foreground">
+                    Reward is triggered when an invited user subscribes to a paid plan
+                  </p>
+                </Button>
+                <Button
+                  variant="outline"
+                  className={`h-auto w-full flex-col items-start p-4 ${
+                    rewardTrigger === "custom" ? "border-primary text-primary" : ""
+                  }`}
+                  onClick={() => setRewardTrigger("custom")}
+                >
+                  <div className="flex w-full items-center justify-between">
+                    <span className="font-semibold">Custom Event</span>
+                    {rewardTrigger === "custom" && <Check className="h-4 w-4" />}
+                  </div>
+                  <p className="mt-1 text-left text-sm text-muted-foreground">
+                    Specify a custom event that will trigger the reward
+                  </p>
+                </Button>
+              </div>
+              {rewardTrigger === "custom" && (
+                <div className="mt-4">
+                  <Label htmlFor="custom-event">Custom Event Name</Label>
+                  <Input
+                    id="custom-event"
+                    type="text"
+                    placeholder="e.g., first_purchase"
+                    value={customTrigger}
+                    onChange={(e) => setCustomTrigger(e.target.value)}
+                    className="mt-1"
+                  />
                 </div>
-                {rewardTrigger === 'custom' && (
-                  <div className="mt-4">
-                    <Label>Custom event name</Label>
-                    <Input
-                      type="text"
-                      placeholder="Enter custom event name"
-                      value={customEventName}
-                      onChange={(e) => setCustomEventName(e.target.value)}
-                      className="mt-1.5"
-                    />
+              )}
+            </CardContent>
+            <CardFooter className="justify-end">
+              <Button onClick={() => setCurrentStep(2)}>Next Step</Button>
+            </CardFooter>
+          </Card>
+        )}
+
+        {currentStep === 2 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Configure Referrer Rewards</CardTitle>
+              <CardDescription>
+                Set up how referrers will be rewarded for successful invites
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <Label>Reward Method</Label>
+                  <Select value={referrerMethod} onValueChange={setReferrerMethod}>
+                    <SelectTrigger className="mt-1.5">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="stripe">Stripe Payment</SelectItem>
+                      <SelectItem value="paypal">PayPal Transfer</SelectItem>
+                      <SelectItem value="amazon">Amazon Gift Card</SelectItem>
+                      <SelectItem value="custom">Custom Reward</SelectItem>
+                      <SelectItem value="none">No Reward</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {referrerMethod !== 'none' && (
+                  <div>
+                    <Label>Reward Amount</Label>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <span className="text-gray-500">$</span>
+                      <Input
+                        type="number"
+                        value={referrerAmount}
+                        onChange={(e) => setReferrerAmount(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="limit-switch"
+                        checked={limitEnabled}
+                        onCheckedChange={setLimitEnabled}
+                      />
+                      <Label htmlFor="limit-switch">Enable reward limit</Label>
+                    </div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-gray-500" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Set a maximum number of rewards a referrer can earn. This helps control costs and prevent abuse.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  {limitEnabled && (
+                    <div className="flex items-center space-x-2">
+                      <Label>Maximum rewards per referrer:</Label>
+                      <Input
+                        type="number"
+                        value={rewardLimit}
+                        onChange={(e) => setRewardLimit(e.target.value)}
+                        className="w-24"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="justify-between">
+              <Button variant="outline" onClick={() => setCurrentStep(1)}>
+                Previous
+              </Button>
+              <Button onClick={() => setCurrentStep(3)}>Next Step</Button>
+            </CardFooter>
+          </Card>
+        )}
+
+        {currentStep === 3 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Configure Invitee Rewards</CardTitle>
+              <CardDescription>
+                Set up how invited users will be rewarded for joining
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <Label>Reward Method</Label>
+                  <Select value={inviteeMethod} onValueChange={setInviteeMethod}>
+                    <SelectTrigger className="mt-1.5">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="stripe">Stripe Payment</SelectItem>
+                      <SelectItem value="paypal">PayPal Transfer</SelectItem>
+                      <SelectItem value="amazon">Amazon Gift Card</SelectItem>
+                      <SelectItem value="custom">Custom Reward</SelectItem>
+                      <SelectItem value="none">No Reward</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {inviteeMethod !== 'none' && (
+                  <div>
+                    <Label>Reward Amount</Label>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <span className="text-gray-500">$</span>
+                      <Input
+                        type="number"
+                        value={inviteeAmount}
+                        onChange={(e) => setInviteeAmount(e.target.value)}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
-
-              <div className="h-px bg-gray-200" />
-
-              <div>
-                <h2 className="text-lg font-medium">Referrer reward</h2>
-                <div className="mt-4">                
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <TriggerButton
-                      value="stripe"
-                      selected={referrerPayout.method === 'stripe'}
-                      onClick={() => setReferrerPayout({ method: 'stripe' })}
-                    >
-                      Stripe
-                    </TriggerButton>
-                    <TriggerButton
-                      value="paypal"
-                      selected={referrerPayout.method === 'paypal'}
-                      onClick={() => setReferrerPayout({ method: 'paypal' })}
-                    >
-                      PayPal
-                    </TriggerButton>
-                    <TriggerButton
-                      value="amazon"
-                      selected={referrerPayout.method === 'amazon'}
-                      onClick={() => setReferrerPayout({ method: 'amazon' })}
-                    >
-                      Amazon gift card
-                    </TriggerButton>
-                    <TriggerButton
-                      value="none"
-                      selected={referrerPayout.method === 'none'}
-                      onClick={() => setReferrerPayout({ method: 'none' })}
-                    >
-                      No reward
-                    </TriggerButton>
-                  </div>
-                  {renderPayoutFields(referrerPayout, false)}
-                </div>
-              </div>
-
-              <div className="h-px bg-gray-200" />
-
-              <div>
-                <h2 className="text-lg font-medium">Invitee reward</h2>
-                <div className="mt-4">
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <TriggerButton
-                      value="stripe"
-                      selected={inviteePayout.method === 'stripe'}
-                      onClick={() => setInviteePayout({ method: 'stripe' })}
-                    >
-                      Stripe
-                    </TriggerButton>
-                    <TriggerButton
-                      value="paypal"
-                      selected={inviteePayout.method === 'paypal'}
-                      onClick={() => setInviteePayout({ method: 'paypal' })}
-                    >
-                      PayPal
-                    </TriggerButton>
-                    <TriggerButton
-                      value="amazon"
-                      selected={inviteePayout.method === 'amazon'}
-                      onClick={() => setInviteePayout({ method: 'amazon' })}
-                    >
-                      Amazon gift card
-                    </TriggerButton>
-                    <TriggerButton
-                      value="none"
-                      selected={inviteePayout.method === 'none'}
-                      onClick={() => setInviteePayout({ method: 'none' })}
-                    >
-                      No reward
-                    </TriggerButton>
-                  </div>
-                  {renderPayoutFields(inviteePayout, true)}
-                </div>
-              </div>
-            </div>
+            </CardContent>
+            <CardFooter className="justify-between">
+              <Button variant="outline" onClick={() => setCurrentStep(2)}>
+                Previous
+              </Button>
+              <Link href="/campaign-builder/how-it-looks">
+                <Button className="bg-gray-600 hover:bg-gray-700">Continue</Button>
+              </Link>
+            </CardFooter>
           </Card>
-
-          <div className="flex justify-end">
-            <Link href="/campaign-builder/how-it-looks">
-              <Button className="bg-gray-600 hover:bg-gray-700">Next</Button>
-            </Link>
-          </div>
-        </div>
+        )}
       </div>
     </CampaignLayout>
   )

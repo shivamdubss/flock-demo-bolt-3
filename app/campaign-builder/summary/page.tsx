@@ -5,6 +5,13 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 import { CampaignHeader } from "@/components/campaign-header"
 import { 
   CheckCircle2, 
@@ -21,6 +28,8 @@ import {
 export default function Summary() {
   const router = useRouter()
   const [campaignTitle, setCampaignTitle] = useState("Campaign #1")
+  const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false)
+  const [inviteEmail, setInviteEmail] = useState("")
 
   const sections = [
     {
@@ -136,13 +145,59 @@ export default function Summary() {
               >
                 Save and close
               </Button>
-              <Button className="flex-1 bg-gray-700 text-white hover:bg-gray-600">
+              <Button 
+                className="flex-1 bg-gray-700 text-white hover:bg-gray-600"
+                onClick={() => setIsInviteDialogOpen(true)}
+              >
                 Invite developers
               </Button>
             </div>
           </div>
         </div>
       </div>
+
+      <Dialog open={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Invite developers</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Bring your referral campaign to life: Send your dev team
+              instructions to access and implement Flock's SDK.
+            </p>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Email</label>
+              <Input
+                type="email"
+                placeholder="bart@linear.com"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-4">
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => {
+                  // Copy invite link logic here
+                }}
+              >
+                Copy invite link
+              </Button>
+              <Button 
+                className="flex-1 bg-gray-700 hover:bg-gray-600"
+                onClick={() => {
+                  // Send invites logic here
+                  setIsInviteDialogOpen(false)
+                }}
+              >
+                Send invites
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

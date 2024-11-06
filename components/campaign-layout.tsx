@@ -20,7 +20,7 @@ export function CampaignLayout({
     { id: 'rewards', label: 'Rewards', href: '/campaign-builder' },
     { id: 'how-it-looks', label: 'How it looks', href: '/campaign-builder/how-it-looks' },
     { id: 'referrer-journey', label: 'Referrer journey', href: '/campaign-builder/referrer-journey' },
-    { id: 'referee-journey', label: 'Referee journey', href: '/campaign-builder/referee-journey' },
+    { id: 'referee-journey', label: 'Invitee journey', href: '/campaign-builder/referee-journey' },
     { id: 'summary', label: 'Summary', href: '/campaign-builder/summary' }
   ]
 

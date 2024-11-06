@@ -99,7 +99,7 @@ export default function HowItLooks() {
               className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
               href="/campaign-builder/referee-journey"
             >
-              Referee journey
+              Invitee journey
             </Link>
             <Link
               className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"

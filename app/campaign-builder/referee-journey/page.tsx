@@ -31,7 +31,7 @@ export default function RefereeJourney() {
       subtitle: 'All users',
       icon: 'invite',
       config: {
-        content: '',
+        content: "Hey Lisa! I'm loving Acme, it's a great way to learn yoga. If you sign up using this code {referral_code} you'll get a $10 Amazon gift card!",
       }
     },
     {
@@ -40,7 +40,7 @@ export default function RefereeJourney() {
       subtitle: 'Successful referral',
       icon: 'reward',
       config: {
-        content: '',
+        content: "Hi {referrer_name},\n\nGreat news, you just earned a $10 gift card! Click here to redeem:\n\n{gift_card_redemption}\n\nKeep sharing the love! You can earn up to $50.\n\nThanks,\nBiteSight Team",
       }
     }
   ])
@@ -77,34 +77,24 @@ export default function RefereeJourney() {
         </Button>
       </div>
 
-      {step.id === '1' && (
-        <div>
-          <h2 className="text-lg font-semibold">Invite Message</h2>
-          <p className="mt-2 text-gray-600">
-            The customizable text that accompanies a referral link inviting a Referee to sign up for your product.
-          </p>
-        </div>
-      )}
-
       <div className="space-y-4">
         <div>
-          <Label>Content</Label>
+          <Label>Message</Label>
           <Textarea
             value={step.config.content}
             onChange={(e) => handleConfigChange(step.id, 'content', e.target.value)}
-            placeholder={step.id === '1' 
-              ? "Example: Hey Lisa! I'm loving Linear, it's an elegant way to build software that's so much easier to use than project management tools like Jira. If you sign up for Linear using this link you'll get $10!" 
-              : "Enter content for this step"}
-            className="mt-1.5 min-h-[150px]"
+            className="mt-1.5 min-h-[250px]"
           />
         </div>
       </div>
 
-      <Link href="/campaign-builder/summary">
-        <Button className="w-full bg-gray-600 hover:bg-gray-700">
-          Next
-        </Button>
-      </Link>
+      <div className="pt-1">
+        <Link href="/campaign-builder/summary">
+          <Button className="w-full bg-gray-600 hover:bg-gray-700">
+            Next
+          </Button>
+        </Link>
+      </div>
     </div>
   )
 
