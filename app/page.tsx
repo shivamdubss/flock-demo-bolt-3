@@ -128,20 +128,16 @@ export default function HomePage() {
 
         <main className="flex-1 overflow-y-auto bg-background">
           {campaigns.length === 0 ? (
-            <div className="flex min-h-[600px] flex-col items-center justify-center gap-2 p-4 md:gap-8 md:p-6">
+            <div className="flex min-h-[600px] flex-col items-center justify-center gap-2 p-4 md:gap-0 md:p-6">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image%2030-5g6EVABvmPY87cK1Bm0moFCY3AXvlc.png"
-                width={120}
-                height={120}
+                src="https://484zd26nhzbahsul.public.blob.vercel-storage.com/Frame%20184716%20(2)-Lj4iJzVzQS8U8dm0jlT368f48hY1az.svg"
+                width={500}
+                height={500}
                 alt="Flock media icons"
                 className="mb-4"
               />
-              <h1 className="text-2xl font-semibold tracking-tight">Welcome to Flock</h1>
-              <p className="text-center text-muted-foreground">
-                Get started by building your first referral campaign in minutes.
-              </p>
               <Button 
-                className="mt-4 bg-emerald-600 hover:bg-emerald-600/90"
+                className="bg-emerald-600 hover:bg-emerald-600/90"
                 onClick={handleCreateCampaign}
                 disabled={isCreating}
               >
@@ -151,7 +147,7 @@ export default function HomePage() {
                     Creating...
                   </>
                 ) : (
-                  'Build a campaign'
+                  'Create a campaign'
                 )}
               </Button>
             </div>

@@ -7,9 +7,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,7 +22,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Progress } from "@/components/ui/progress"
 import {
   Tooltip,
   TooltipContent,
@@ -30,6 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 export default function RewardsPage() {
   const [currentStep, setCurrentStep] = React.useState(1)
@@ -42,7 +42,45 @@ export default function RewardsPage() {
   const [limitEnabled, setLimitEnabled] = React.useState(false)
   const [rewardLimit, setRewardLimit] = React.useState("100")
 
-  const progress = (currentStep / 3) * 100
+  const steps = [
+    { name: "Trigger Setup", weight: 1 },
+    { name: "Referrer Rewards", weight: 1 },
+    { name: "Invitee Rewards", weight: 1 },
+  ]
+
+
+  const ProgressTracker = () => {
+    return (
+      <div className="w-full space-y-2 mb-6">
+        <div className="flex gap-2">
+          {steps.map((step, index) => {
+            const isCompleted = index + 1 < currentStep
+            const isCurrent = index + 1 === currentStep
+
+            return (
+              <div key={index} className="flex-1">
+                <div
+                  className={cn(
+                    "h-1 w-full rounded-full mb-2",
+                    isCompleted ? "bg-gray-800" :
+                    "bg-muted"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "text-sm font-medium",
+                    isCurrent ? "text-foreground" : "text-muted-foreground"
+                  )}
+                >
+                  {step.name}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <CampaignLayout currentStep="rewards">
@@ -54,14 +92,7 @@ export default function RewardsPage() {
           </p>
         </div>
 
-        <div className="mb-6">
-          <Progress value={progress} className="h-2" />
-          <div className="mt-2 flex justify-between text-sm text-gray-600">
-            <span>Trigger Setup</span>
-            <span>Referrer Rewards</span>
-            <span>Invitee Rewards</span>
-          </div>
-        </div>
+        <ProgressTracker />
 
         {currentStep === 1 && (
           <Card>

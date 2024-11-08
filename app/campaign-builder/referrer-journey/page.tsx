@@ -155,7 +155,6 @@ const TriggerCard = ({
 
 // Main Component
 export default function ReferrerJourneyPage() {
-  const { campaignName, setCampaignName } = useCampaignStore()
   const [triggers, setTriggers] = React.useState<Trigger[]>([
     {
       id: '1',
