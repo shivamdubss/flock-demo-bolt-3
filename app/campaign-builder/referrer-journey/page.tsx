@@ -2,15 +2,12 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { X, Plus, Mail, Bell, MessageSquare, ChevronRight, Pencil, Trash2 } from "lucide-react"
+import { X, Mail, Bell, MessageSquare, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { CampaignHeader } from "@/components/campaign-header"
-import { useCampaignStore } from "@/lib/campaign-store"
 import { CampaignLayout } from "@/components/campaign-layout"
 import {
   Select,
@@ -34,7 +31,6 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip"
 
-// Types
 interface Communication {
   id: string
   type: 'email' | 'push' | 'text'
@@ -54,7 +50,6 @@ interface Trigger {
   isLocked?: boolean
 }
 
-// Helper Components
 const CommunicationIcon = ({ type }: { type: Communication['type'] }) => {
   switch (type) {
     case 'email':
@@ -83,13 +78,10 @@ const TriggerCard = ({
 }) => (
   <Card className="mb-6 group">
     <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-      <div className="space-y-1">
+      <div>
         <CardTitle className="text-lg font-semibold">
           {trigger.name}
         </CardTitle>
-        <Badge variant="secondary" className="text-xs font-normal px-2 py-1">
-          {trigger.type}
-        </Badge>
       </div>
       {!trigger.isLocked && (
         <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -145,46 +137,45 @@ const TriggerCard = ({
           className="w-full border-dashed"
           onClick={() => onAddCommunication(trigger.id)}
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Communication
+          Add Message
         </Button>
       </div>
     </CardContent>
   </Card>
 )
 
-// Main Component
 export default function ReferrerJourneyPage() {
   const [triggers, setTriggers] = React.useState<Trigger[]>([
     {
       id: '1',
-      name: "Sign Up",
-      type: "User Event",
+      name: "First Share",
+      type: "System Event",
       communications: [
         {
           id: '1-1',
+          type: "email",
+          title: "Share Confirmation",
+          description: "Sent immediately after first share",
+          subject: "Thanks for sharing!",
+          body: "Hey {referrer_name}!\n\nThank you for sharing our platform. We appreciate your support!",
+          buttonUrl: "https://example.com/referral-status"
+        }
+      ],
+      isLocked: true
+    },
+    {
+      id: '2',
+      name: "Sign Up",
+      type: "System Event",
+      communications: [
+        {
+          id: '2-1',
           type: "email",
           title: "Welcome Email",
           description: "Sent immediately after sign up",
           subject: "Welcome to our platform!",
           body: "Hey {referrer_name}!\n\nWelcome to our platform. We're excited to have you on board!",
           buttonUrl: "https://example.com/get-started"
-        }
-      ]
-    },
-    {
-      id: '2',
-      name: "First Share",
-      type: "Custom Event",
-      communications: [
-        {
-          id: '2-1',
-          type: "email",
-          title: "Share Confirmation",
-          description: "Sent after first referral share",
-          subject: "Great job on your first share!",
-          body: "Hi {user},\n\nCongratulations on making your first referral share! Keep it up!",
-          buttonUrl: "https://example.com/referral-status"
         }
       ]
     },
@@ -207,14 +198,14 @@ export default function ReferrerJourneyPage() {
     }
   ])
 
-const [editingComm, setEditingComm] = React.useState<{ triggerId: string, comm: Communication | null }>({ triggerId: '', comm: null })
+  const [editingComm, setEditingComm] = React.useState<{ triggerId: string, comm: Communication | null }>({ triggerId: '', comm: null })
   const [editingTrigger, setEditingTrigger] = React.useState<Trigger | null>(null)
 
   const addTrigger = () => {
     const newTrigger: Trigger = {
       id: Date.now().toString(),
       name: "New Trigger",
-      type: "Custom Event",
+      type: "System Event",
       communications: []
     }
     setTriggers([...triggers, newTrigger])
@@ -236,7 +227,7 @@ const [editingComm, setEditingComm] = React.useState<{ triggerId: string, comm: 
   }
 
   const deleteTrigger = (triggerId: string) => {
-    setTriggers(triggers.filter(t => t.id !== triggerId))
+    setTriggers(triggers.filter(t => t.id !== triggerId && !t.isLocked))
   }
 
   const addCommunication = (triggerId: string) => {
@@ -286,13 +277,25 @@ const [editingComm, setEditingComm] = React.useState<{ triggerId: string, comm: 
             <div className="space-y-2">
               <h1 className="text-2xl font-semibold">Referrer Journey</h1>
               <p className="text-gray-600">
-                Design the communication flow for users who refer others
+                Design the communication flow for users who refer others.
               </p>
             </div>
-            <Button onClick={addTrigger}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Trigger
-            </Button>
+            <div className="flex space-x-4">
+              <Button 
+                onClick={addTrigger}
+                className="bg-[#585A59] hover:bg-[#585A59]/90 text-white"
+              >
+                Add Trigger
+              </Button>
+              <Button 
+                asChild
+                className="bg-[#318562] hover:bg-[#318562]/90 text-white"
+              >
+                <Link href="/campaign-builder/referee-journey">
+                  Continue
+                </Link>
+              </Button>
+            </div>
           </div>
           <div className="space-y-6">
             {triggers.map((trigger) => (
@@ -309,29 +312,13 @@ const [editingComm, setEditingComm] = React.useState<{ triggerId: string, comm: 
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className="mt-8 flex justify-between px-6 py-4 bg-white border-t">
-          <Button variant="outline" asChild>
-            <Link href="/campaign-builder/customize">
-              <ChevronRight className="mr-2 h-4 w-4 rotate-180" />
-              Back to Design
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href="/campaign-builder/referee-journey">
-              Continue to Invitee Journey
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-
         {/* Communication Edit Dialog */}
         <Dialog open={!!editingComm.comm} onOpenChange={() => setEditingComm({ triggerId: '', comm: null })}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>{editingComm.comm?.id ? 'Edit' : 'Add'} Communication</DialogTitle>
+              <DialogTitle>{editingComm.comm?.id ? 'Edit' : 'Add'} Message</DialogTitle>
               <DialogDescription>
-                Configure the details for this communication.
+                Configure the details for this message.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -416,7 +403,12 @@ const [editingComm, setEditingComm] = React.useState<{ triggerId: string, comm: 
               )}
             </div>
             <DialogFooter>
-              <Button onClick={saveCommunication}>Save Communication</Button>
+              <Button 
+                onClick={saveCommunication}
+                className="bg-[#585A59] hover:bg-[#585A59]/90 text-white"
+              >
+                Save Message
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -457,27 +449,18 @@ const [editingComm, setEditingComm] = React.useState<{ triggerId: string, comm: 
                     <SelectItem value="launch">Launch</SelectItem>
                     <SelectItem value="new-user">New User</SelectItem>
                     <SelectItem value="first-reward">First Reward</SelectItem>
-                    <SelectItem value="custom">Custom Event</SelectItem>
+                    <SelectItem value="system">System Event</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-              {editingTrigger?.type === 'custom' && (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="custom-type" className="text-right">
-                    Custom Type
-                  </Label>
-                  <Input
-                    id="custom-type"
-                    value={editingTrigger?.customType || ''}
-                    onChange={(e) => setEditingTrigger({ ...editingTrigger!, customType: e.target.value })}
-                    className="col-span-3"
-                    placeholder="Enter custom event type..."
-                  />
-                </div>
-              )}
             </div>
             <DialogFooter>
-              <Button onClick={saveTrigger}>Save Trigger</Button>
+              <Button 
+                onClick={saveTrigger}
+                className="bg-[#585A59] hover:bg-[#585A59]/90 text-white"
+              >
+                Save Trigger
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

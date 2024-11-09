@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { CampaignLayout } from "@/components/campaign-layout"
-import { Info, Check } from "lucide-react"
+import { Check } from "lucide-react"
 import {
   Card,
   CardContent,
@@ -22,12 +22,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
@@ -47,7 +41,6 @@ export default function RewardsPage() {
     { name: "Referrer Rewards", weight: 1 },
     { name: "Invitee Rewards", weight: 1 },
   ]
-
 
   const ProgressTracker = () => {
     return (
@@ -83,7 +76,7 @@ export default function RewardsPage() {
   }
 
   return (
-    <CampaignLayout currentStep="rewards">
+    <CampaignLayout currentStep="rewards" campaignName="Campaign #1">
       <div className="mx-auto max-w-4xl p-6">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold">Rewards Configuration</h1>
@@ -97,7 +90,7 @@ export default function RewardsPage() {
         {currentStep === 1 && (
           <Card>
             <CardHeader>
-              <CardTitle>When should rewards be triggered?</CardTitle>
+              <CardTitle className="text-xl">When should rewards be triggered?</CardTitle>
               <CardDescription>
                 Choose the event that will trigger rewards for both referrers and invitees
               </CardDescription>
@@ -107,7 +100,7 @@ export default function RewardsPage() {
                 <Button
                   variant="outline"
                   className={`h-auto w-full flex-col items-start p-4 ${
-                    rewardTrigger === "new-user" ? "border-primary text-primary" : ""
+                    rewardTrigger === "new-user" ? "border-emerald-600 text-emerald-600" : ""
                   }`}
                   onClick={() => setRewardTrigger("new-user")}
                 >
@@ -122,7 +115,7 @@ export default function RewardsPage() {
                 <Button
                   variant="outline"
                   className={`h-auto w-full flex-col items-start p-4 ${
-                    rewardTrigger === "subscription" ? "border-primary text-primary" : ""
+                    rewardTrigger === "subscription" ? "border-emerald-600 text-emerald-600" : ""
                   }`}
                   onClick={() => setRewardTrigger("subscription")}
                 >
@@ -137,7 +130,7 @@ export default function RewardsPage() {
                 <Button
                   variant="outline"
                   className={`h-auto w-full flex-col items-start p-4 ${
-                    rewardTrigger === "custom" ? "border-primary text-primary" : ""
+                    rewardTrigger === "custom" ? "border-emerald-600 text-emerald-600" : ""
                   }`}
                   onClick={() => setRewardTrigger("custom")}
                 >
@@ -165,7 +158,7 @@ export default function RewardsPage() {
               )}
             </CardContent>
             <CardFooter className="justify-end">
-              <Button onClick={() => setCurrentStep(2)}>Next Step</Button>
+              <Button onClick={() => setCurrentStep(2)} className="bg-emerald-600 hover:bg-emerald-600/90">Next Step</Button>
             </CardFooter>
           </Card>
         )}
@@ -173,7 +166,7 @@ export default function RewardsPage() {
         {currentStep === 2 && (
           <Card>
             <CardHeader>
-              <CardTitle>Configure Referrer Rewards</CardTitle>
+              <CardTitle className="text-xl">Configure Referrer Rewards</CardTitle>
               <CardDescription>
                 Set up how referrers will be rewarded for successful invites
               </CardDescription>
@@ -218,16 +211,6 @@ export default function RewardsPage() {
                       />
                       <Label htmlFor="limit-switch">Enable reward limit</Label>
                     </div>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Info className="h-4 w-4 text-gray-500" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Set a maximum number of rewards a referrer can earn. This helps control costs and prevent abuse.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
                   </div>
                   {limitEnabled && (
                     <div className="flex items-center space-x-2">
@@ -247,7 +230,7 @@ export default function RewardsPage() {
               <Button variant="outline" onClick={() => setCurrentStep(1)}>
                 Previous
               </Button>
-              <Button onClick={() => setCurrentStep(3)}>Next Step</Button>
+              <Button onClick={() => setCurrentStep(3)} className="bg-emerald-600 hover:bg-emerald-600/90">Next Step</Button>
             </CardFooter>
           </Card>
         )}
@@ -255,7 +238,7 @@ export default function RewardsPage() {
         {currentStep === 3 && (
           <Card>
             <CardHeader>
-              <CardTitle>Configure Invitee Rewards</CardTitle>
+              <CardTitle className="text-xl">Configure Invitee Rewards</CardTitle>
               <CardDescription>
                 Set up how invited users will be rewarded for joining
               </CardDescription>
@@ -297,7 +280,7 @@ export default function RewardsPage() {
                 Previous
               </Button>
               <Link href="/campaign-builder/how-it-looks">
-                <Button className="bg-gray-600 hover:bg-gray-700">Continue</Button>
+                <Button className="bg-emerald-600 hover:bg-emerald-600/90">Continue</Button>
               </Link>
             </CardFooter>
           </Card>

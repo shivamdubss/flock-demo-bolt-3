@@ -115,7 +115,7 @@ const StackEditor = () => (
               className="mt-2"
             />
           </div>
-          <div className="flex w-16 items-center gap-1">
+          <div className="flex w-24 items-center gap-1">
             <Input type="number" defaultValue="8" className="h-8" />
             <span className="text-sm text-gray-500">px</span>
           </div>
@@ -379,7 +379,7 @@ const ImageEditor = () => (
 export default function Customize() {
   const [campaignTitle, setCampaignTitle] = useState("Campaign #1")
   const [components, setComponents] = useState(initialComponents)
-  const [selectedComponent, setSelectedComponent] = useState<ComponentType | null>(null)
+  const [selectedComponent, setSelectedComponent] = useState(initialComponents[0])
 
   const toggleComponent = (id: string) => {
     setComponents(prev => {
@@ -537,7 +537,7 @@ export default function Customize() {
             <div className="space-y-6">
               {renderEditor()}
               <Link href="/campaign-builder/referrer-journey" className="mt-8 block">
-                <Button className="w-full bg-gray-600 hover:bg-gray-700">
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-600/90">
                   Continue
                 </Button>
               </Link>

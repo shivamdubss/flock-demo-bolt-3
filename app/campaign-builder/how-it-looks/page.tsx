@@ -214,7 +214,7 @@ export default function HowItLooks() {
             <div className="p-4">
               <Button 
                 onClick={handleUseTemplate}
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white"
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
               >
                 Use Template →
               </Button>
