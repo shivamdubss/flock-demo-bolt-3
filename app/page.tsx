@@ -102,7 +102,7 @@ export default function HomePage() {
             <SidebarMenuSub>
               <SidebarMenuItem className="text-gray-500">Dev Setup</SidebarMenuItem>
               <SidebarMenuSubItem>
-                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="#">
+                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/access-keys">
                   <Key className="h-4 w-4" />
                   Access Keys
                 </Link>

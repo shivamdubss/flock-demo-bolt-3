@@ -7,6 +7,7 @@ import { ChevronDown, ChevronRight, CheckCircle2, X, ImageIcon, Type, MousePoint
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { CampaignHeader } from "@/components/campaign-header"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
   Select,
   SelectContent,
@@ -18,6 +19,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { CampaignLayout } from "@/components/campaign-layout"
 
 interface ComponentType {
   id: string
@@ -152,57 +161,220 @@ const StackEditor = () => (
 )
 
 const TextEditor = () => (
-  <div className="space-y-4">
-    <div>
-      <Label>Text Content</Label>
-      <Input type="text" placeholder="Enter text..." className="mt-1.5" />
+  <div className="space-y-6">
+    {/* Text Properties */}
+    <div className="space-y-4">
+      <div className="border-b border-gray-200 pb-3">
+        <div className="flex items-center gap-2">
+          <Type className="h-4 w-4" />
+          <h3 className="font-medium">Text Properties</h3>
+        </div>
+      </div>
+      
+      <div>
+        <Label>Text Content</Label>
+        <Input type="text" placeholder="Enter text..." className="mt-1.5" />
+      </div>
+
+      <div>
+        <Label>Font</Label>
+        <Select defaultValue="inter">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="inter">Inter</SelectItem>
+            <SelectItem value="roboto">Roboto</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div>
+        <Label>Font Size</Label>
+        <Select defaultValue="16">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="12">12px</SelectItem>
+            <SelectItem value="14">14px</SelectItem>
+            <SelectItem value="16">16px</SelectItem>
+            <SelectItem value="18">18px</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div>
+        <Label>Font Weight</Label>
+        <Select defaultValue="regular">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="regular">Regular</SelectItem>
+            <SelectItem value="medium">Medium</SelectItem>
+            <SelectItem value="bold">Bold</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div>
+        <Label>Font Color</Label>
+        <Input type="text" defaultValue="#1F1F1F" />
+      </div>
     </div>
 
-    <div>
-      <Label>Font</Label>
-      <Select defaultValue="inter">
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="inter">Inter</SelectItem>
-          <SelectItem value="roboto">Roboto</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+    {/* Container Properties */}
+    <div className="space-y-4">
+      <div className="border-b border-gray-200 pb-3">
+        <div className="flex items-center gap-2">
+          <Settings className="h-4 w-4" />
+          <h3 className="font-medium">Container Properties</h3>
+        </div>
+      </div>
+      
+      <div>
+        <Label>Margins</Label>
+        <div className="mt-1.5 grid grid-cols-2 gap-2">
+          <div>
+            <Label className="text-xs text-muted-foreground">Top</Label>
+            <div className="flex items-center gap-1">
+              <Input type="number" defaultValue="40" />
+              <Select defaultValue="px" className="w-20">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="px">px</SelectItem>
+                  <SelectItem value="rem">rem</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">Right</Label>
+            <div className="flex items-center gap-1">
+              <Input type="number" defaultValue="0" />
+              <Select defaultValue="px" className="w-20">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="px">px</SelectItem>
+                  <SelectItem value="rem">rem</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">Bottom</Label>
+            <div className="flex items-center gap-1">
+              <Input type="number" defaultValue="0" />
+              <Select defaultValue="px" className="w-20">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="px">px</SelectItem>
+                  <SelectItem value="rem">rem</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">Left</Label>
+            <div className="flex items-center gap-1">
+              <Input type="number" defaultValue="0" />
+              <Select defaultValue="px" className="w-20">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="px">px</SelectItem>
+                  <SelectItem value="rem">rem</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div>
-      <Label>Font Size</Label>
-      <Select defaultValue="16">
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="12">12px</SelectItem>
-          <SelectItem value="14">14px</SelectItem>
-          <SelectItem value="16">16px</SelectItem>
-          <SelectItem value="18">18px</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+      <div>
+        <Label>Paddings</Label>
+        <div className="mt-1.5 grid grid-cols-2 gap-2">
+          <div>
+            <Label className="text-xs text-muted-foreground">Top</Label>
+            <div className="flex items-center gap-1">
+              <Input type="number" defaultValue="0" />
+              <Select defaultValue="px" className="w-20">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="px">px</SelectItem>
+                  <SelectItem value="rem">rem</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">Right</Label>
+            <div className="flex items-center gap-1">
+              <Input type="number" defaultValue="0" />
+              <Select defaultValue="px" className="w-20">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="px">px</SelectItem>
+                  <SelectItem value="rem">rem</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">Bottom</Label>
+            <div className="flex items-center gap-1">
+              <Input type="number" defaultValue="0" />
+              <Select defaultValue="px" className="w-20">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="px">px</SelectItem>
+                  <SelectItem value="rem">rem</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">Left</Label>
+            <div className="flex items-center gap-1">
+              <Input type="number" defaultValue="0" />
+              <Select defaultValue="px" className="w-20">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="px">px</SelectItem>
+                  <SelectItem value="rem">rem</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div>
-      <Label>Font Weight</Label>
-      <Select defaultValue="regular">
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="regular">Regular</SelectItem>
-          <SelectItem value="medium">Medium</SelectItem>
-          <SelectItem value="bold">Bold</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
-
-    <div>
-      <Label>Font Color</Label>
-      <Input type="text" defaultValue="#1F1F1F" />
+      <div>
+        <Label>Borders</Label>
+        <div className="mt-1.5 space-y-2">
+          <div className="flex items-center gap-2">
+            <Input type="number" defaultValue="1" className="w-20" />
+            <span className="text-sm text-muted-foreground">px</span>
+          </div>
+          <Input type="text" defaultValue="#E5E7EB" placeholder="Border color" />
+        </div>
+      </div>
     </div>
   </div>
 )
@@ -380,6 +552,15 @@ export default function Customize() {
   const [campaignTitle, setCampaignTitle] = useState("Campaign #1")
   const [components, setComponents] = useState(initialComponents)
   const [selectedComponent, setSelectedComponent] = useState(initialComponents[0])
+  const [selectedView, setSelectedView] = useState("referrer")
+  const [showAddContainer, setShowAddContainer] = useState(false)
+
+  // Mock image URLs for different views
+  const viewImages = {
+    referrer: "https://484zd26nhzbahsul.public.blob.vercel-storage.com/Frame%20184695%20(1)-DvhLQIiW7FROdvr4vzqdPABShYal7v.svg",
+    invitee: "https://484zd26nhzbahsul.public.blob.vercel-storage.com/Frame%20184696%20(1)-kiAROEwHH21PSFl4mlpMM1x14JklIk.svg",
+    inviteeSuccess: "https://484zd26nhzbahsul.public.blob.vercel-storage.com/Frame%20184713%20(1)-yl93MKTReDFukQGVJjenQAl4t5aqqA.svg"
+  }
 
   const toggleComponent = (id: string) => {
     setComponents(prev => {
@@ -461,90 +642,140 @@ export default function Customize() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left Sidebar */}
-      <div className="w-64 border-r bg-gray-50/40">
-        <nav className="space-y-2 p-4">
-          <div className="space-y-1">
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
-              href="/campaign-builder"
-            >
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-              Rewards
-            </Link>
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-emerald-600 hover:bg-gray-100"
-              href="#"
-            >
-              How it looks
-            </Link>
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
-              href="/campaign-builder/referrer-journey"
-            >
-              Referrer journey
-            </Link>
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
-              href="/campaign-builder/referee-journey"
-            >
-              Invitee journey
-            </Link>
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
-              href="/campaign-builder/summary"
-            >
-              Summary
-            </Link>
-          </div>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1">
-        <CampaignHeader 
-          campaignTitle={campaignTitle}
-          onTitleChange={setCampaignTitle}
-        />
-
-        <div className="grid grid-cols-[300px_1fr_300px] divide-x">
-          {/* Layout Tree */}
-          <div className="p-6">
-            <h2 className="mb-4 text-lg font-semibold">Layout</h2>
-            <div className="space-y-1">
-              {renderComponentTree(components)}
-            </div>
-          </div>
-
-          {/* Preview */}
-          <div className="flex items-center justify-center p-6">
-            <div className="relative aspect-[390/844] w-[300px] overflow-hidden rounded-[38px] bg-white shadow-xl">
-              <div className="absolute left-1/2 top-0 h-6 w-40 -translate-x-1/2 rounded-b-2xl bg-black"></div>
-              <Image
-                src="https://484zd26nhzbahsul.public.blob.vercel-storage.com/Frame%20184695%20(1)-DvhLQIiW7FROdvr4vzqdPABShYal7v.svg"
-                alt="Template preview"
-                width={300}
-                height={650}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Component Editor */}
-          <div className="p-6">
-            <h2 className="mb-4 text-lg font-semibold">Component Editor</h2>
-            <div className="space-y-6">
-              {renderEditor()}
-              <Link href="/campaign-builder/referrer-journey" className="mt-8 block">
-                <Button className="w-full bg-emerald-600 hover:bg-emerald-600/90">
-                  Continue
+    <>
+      <CampaignLayout currentStep="how-it-looks">
+        <div className="flex flex-col h-screen">
+          <CampaignHeader 
+            campaignTitle={campaignTitle}
+            onTitleChange={setCampaignTitle}
+          />
+          <div className="grid grid-cols-[363px_1fr_363px] divide-x flex-1">
+            {/* Layout Tree */}
+            <div className="overflow-y-auto">
+              <div className="p-6">
+                <div className="mb-6">
+                  <ToggleGroup
+                    type="single"
+                    value={selectedView}
+                    onValueChange={(value) => {
+                      if (value) setSelectedView(value)
+                    }}
+                    className="w-full border rounded-lg p-1 bg-gray-50"
+                  >
+                    <ToggleGroupItem
+                      value="referrer"
+                      className="flex-1 rounded-md px-3 py-1.5 text-sm font-medium"
+                    >
+                      Home
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="invitee"
+                      className="flex-1 rounded-md px-3 py-1.5 text-sm font-medium"
+                    >
+                      Code Input
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="inviteeSuccess"
+                      className="flex-1 rounded-md px-3 py-1.5 text-sm font-medium"
+                    >
+                      Success
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+                <h2 className="mb-4 text-lg font-semibold">Layout</h2>
+                <div className="space-y-1">
+                  {renderComponentTree(components)}
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="mt-6 w-full justify-center gap-2"
+                  onClick={() => setShowAddContainer(true)}
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Container
                 </Button>
-              </Link>
+              </div>
+            </div>
+
+            {/* Preview - Fixed Height Container */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative aspect-[390/844] w-[300px] overflow-hidden rounded-[38px] bg-white shadow-xl">
+                  <div className="absolute left-1/2 top-0 h-6 w-40 -translate-x-1/2 rounded-b-2xl bg-black"></div>
+                  <Image
+                    src={viewImages[selectedView as keyof typeof viewImages]}
+                    alt="Template preview"
+                    width={300}
+                    height={650}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Component Editor */}
+            <div className="overflow-y-auto">
+              <div className="p-6 sticky top-0 bg-white z-10">
+                <Link href="/campaign-builder/communications">
+                  <Button className="w-full bg-emerald-600 hover:bg-emerald-600/90">
+                    Continue
+                  </Button>
+                </Link>
+              </div>
+              <div className="px-6 pb-6">
+                {renderEditor()}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </CampaignLayout>
+
+      <Dialog open={showAddContainer} onOpenChange={setShowAddContainer}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add Container</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-4">
+              <div>
+                <Label>Container Name</Label>
+                <Input type="text" placeholder="e.g. Header Section" className="mt-1.5" />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Rows</Label>
+                  <Input 
+                    type="number" 
+                    min="1"
+                    max="12"
+                    defaultValue="2"
+                    className="mt-1.5" 
+                  />
+                </div>
+                <div>
+                  <Label>Columns</Label>
+                  <Input 
+                    type="number"
+                    min="1"
+                    max="12"
+                    defaultValue="2"
+                    className="mt-1.5" 
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAddContainer(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setShowAddContainer(false)}>
+              Add Grid
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

@@ -2,11 +2,12 @@
 
 import Link from "next/link"
 import { CheckCircle2 } from "lucide-react"
+import { CampaignHeader } from "@/components/campaign-header"
 import { useCampaignStore } from "@/lib/campaign-store"
 
 interface CampaignLayoutProps {
   children: React.ReactNode
-  currentStep: 'rewards' | 'how-it-looks' | 'referrer-journey' | 'referee-journey' | 'summary'
+  currentStep: 'rewards' | 'how-it-looks' | 'communications' | 'summary'
 }
 
 export function CampaignLayout({
@@ -26,7 +27,6 @@ export function CampaignLayout({
 
   return (
     <div className="flex min-h-screen">
-      {/* Left Sidebar */}
       <div className="w-64 border-r bg-gray-50/40">
         <nav className="space-y-2 p-4">
           <div className="space-y-1">
@@ -50,11 +50,13 @@ export function CampaignLayout({
           </div>
         </nav>
       </div>
-
-      {/* Main Content */}
       <div className="flex-1">
+        <CampaignHeader 
+          campaignTitle={campaignName}
+          onTitleChange={setCampaignName}
+        />
         {children}
       </div>
     </div>
   )
-}
+} 

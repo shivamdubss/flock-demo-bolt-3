@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { CampaignLayout } from "@/components/campaign-layout"
 
 interface Template {
   id: string
@@ -71,47 +72,7 @@ export default function HowItLooks() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left Sidebar */}
-      <div className="w-64 border-r bg-gray-50/40">
-        <nav className="space-y-2 p-4">
-          <div className="space-y-1">
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
-              href="/campaign-builder"
-            >
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-              Rewards
-            </Link>
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-emerald-600 hover:bg-gray-100"
-              href="#"
-            >
-              How it looks
-            </Link>
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
-              href="/campaign-builder/referrer-journey"
-            >
-              Referrer journey
-            </Link>
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
-              href="/campaign-builder/referee-journey"
-            >
-              Invitee journey
-            </Link>
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
-              href="/campaign-builder/summary"
-            >
-              Summary
-            </Link>
-          </div>
-        </nav>
-      </div>
-
-      {/* Main Content */}
+    <CampaignLayout currentStep="how-it-looks">
       <div className="flex-1">
         <CampaignHeader 
           campaignTitle={campaignTitle}
@@ -222,6 +183,6 @@ export default function HowItLooks() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </CampaignLayout>
   )
 }

@@ -62,18 +62,11 @@ export default function Summary() {
       ]
     },
     {
-      title: "Referrer Journey",
-      href: "/campaign-builder/referrer-journey",
+      title: "Communications",
+      href: "/campaign-builder/communications",
       content: [
-        { label: "Referral Modal", value: "Sharing options: TikTok, X, Facebook" },
-        { label: "Referrer Messaging", value: "Launch email, first share, and new reward" }
-      ]
-    },
-    {
-      title: "Invitee Journey",
-      href: "/campaign-builder/referee-journey",
-      content: [
-        { label: "Invitee Messaging", value: "Intro message, and new reward" }
+        { label: "Referrer Messages", value: "Launch email, first share, and new reward" },
+        { label: "Invitee Messages", value: "Intro message, and new reward" }
       ]
     }
   ]

@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { CampaignLayout } from "@/components/campaign-layout"
-import { Check } from "lucide-react"
+import { Check, CheckCircle2 } from "lucide-react"
 import {
   Card,
   CardContent,
@@ -76,7 +76,7 @@ export default function RewardsPage() {
   }
 
   return (
-    <CampaignLayout currentStep="rewards" campaignName="Campaign #1">
+    <CampaignLayout currentStep="rewards">
       <div className="mx-auto max-w-4xl p-6">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold">Rewards Configuration</h1>
