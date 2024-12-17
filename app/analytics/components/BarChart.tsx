@@ -59,7 +59,9 @@ export function BarChart({
                   <div className="font-medium">{label}</div>
                   {payload.map((item, index) => (
                     <div key={index} className="text-sm text-muted-foreground">
-                      {valueFormatter(Number(item.value) || 0)}
+                      {typeof item.value === 'number' 
+                        ? valueFormatter(item.value)
+                        : valueFormatter(0)}
                     </div>
                   ))}
                 </div>
