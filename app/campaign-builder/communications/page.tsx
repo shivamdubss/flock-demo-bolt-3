@@ -12,7 +12,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Mail, AlertCircle, Webhook } from 'lucide-react'
 import { CampaignLayout } from "@/components/campaign-layout"
-import { CampaignHeader } from "@/components/campaign-header"
 
 export default function CommunicationsPage() {
   const [campaignTitle, setCampaignTitle] = useState("Campaign #1")
@@ -87,10 +86,6 @@ export default function CommunicationsPage() {
   return (
     <CampaignLayout currentStep="communications">
       <div className="flex-1">
-        <CampaignHeader 
-          campaignTitle={campaignTitle}
-          onTitleChange={setCampaignTitle}
-        />
 
         <div className="p-6">
           <div className="mb-6 flex items-center justify-between">

@@ -1,27 +1,21 @@
 'use client'
 
-import * as React from "react"
+import React, { useState } from 'react'
 import Link from "next/link"
 import Image from "next/image"
-import { ChevronDown, Download, BarChart2, Home, Key, Link2, ListChecks } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { BarChart2, BookOpen, Download, Home, Key, Link2, ListChecks, Plus } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -32,192 +26,83 @@ import {
   SidebarMenuSubItem,
   SidebarProvider,
 } from "@/components/ui/sidebar"
-import { 
-  ResponsiveContainer, 
-  BarChart as RechartsBarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip 
-} from 'recharts'
 
-const BarChart = ({ 
-  data,
-  index,
-  categories,
-  colors,
-  yAxisWidth = 48,
-  height = 300,
-  valueFormatter,
-  showGridLines = true,
-  showLegend = false,
-  className
-}) => {
-  return (
-    <div className={className} style={{ width: '100%', height }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <RechartsBarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
-          {showGridLines && (
-            <CartesianGrid 
-              strokeDasharray="3 3"
-              vertical={false}
-              stroke="#E5E7EB"
-            />
-          )}
-          <XAxis 
-            dataKey={index}
-            axisLine={false}
-            tickLine={false}
-            tickMargin={10}
-            fontSize={12}
-            stroke="#6B7280"
-          />
-          <YAxis
-            width={yAxisWidth}
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={valueFormatter}
-            fontSize={12}
-            stroke="#6B7280"
-          />
-          <Tooltip
-            cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
-            content={({ active, payload, label }) => {
-              if (!active || !payload?.length) return null;
-              return (
-                <div className="rounded-lg border bg-background p-2 shadow-md">
-                  <div className="font-medium">{label}</div>
-                  {payload.map((item, index) => (
-                    <div key={index} className="text-sm text-muted-foreground">
-                      {valueFormatter ? valueFormatter(item.value) : item.value}
-                    </div>
-                  ))}
-                </div>
-              );
-            }}
-          />
-          {categories.map((category, index) => (
-            <Bar
-              key={category}
-              dataKey={category}
-              fill={colors[index]}
-              radius={[4, 4, 0, 0]}
-              maxBarSize={50}
-            />
-          ))}
-        </RechartsBarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
+export default function ReferralDashboard() {
+  const [campaign, setCampaign] = useState('Campaign #1')
+  const [timeRange, setTimeRange] = useState('3m')
 
-export default function AnalyticsPage() {
-  const [view, setView] = React.useState<'referrer' | 'invitee'>('referrer')
+  const sharesOverTime = [
+    { month: 'Jan', shares: 800 },
+    { month: 'Feb', shares: 950 },
+    { month: 'Mar', shares: 890 },
+    { month: 'Apr', shares: 1100 },
+    { month: 'May', shares: 1250 },
+    { month: 'Jun', shares: 1400 },
+    { month: 'Jul', shares: 1300 },
+    { month: 'Aug', shares: 1500 },
+    { month: 'Sep', shares: 1600 },
+    { month: 'Oct', shares: 1450 },
+    { month: 'Nov', shares: 1700 },
+    { month: 'Dec', shares: 1800 }
+  ]
 
-  const referrerData = {
-    visitors: {
-      total: 3500,
-      weekly: 50,
-      label: "Referral Visitors All Time"
-    },
-    sharers: {
-      total: 1525,
-      weekly: 20,
-      label: "Sharers All Time"
-    },
-    monthlyChart: {
-      title: "Monthly Referral Visitors",
-      description: "Referrers who opened the widget at least once",
-      data: [
-        { name: 'Jan', value: 100 },
-        { name: 'Feb', value: 80 },
-        { name: 'Mar', value: 90 },
-        { name: 'Apr', value: 70 },
-        { name: 'May', value: 100 },
-        { name: 'Jun', value: 120 },
-        { name: 'Jul', value: 90 },
-        { name: 'Aug', value: 80 },
-        { name: 'Sep', value: 90 },
-        { name: 'Oct', value: 70 },
-        { name: 'Nov', value: 100 },
-        { name: 'Dec', value: 110 },
-      ]
-    },
-    activeChart: {
-      title: "Monthly Active Sharers",
-      description: "Users who shared their referral link",
-      data: [
-        { name: 'Jan', value: 80 },
-        { name: 'Feb', value: 90 },
-        { name: 'Mar', value: 100 },
-        { name: 'Apr', value: 110 },
-        { name: 'May', value: 90 },
-        { name: 'Jun', value: 100 },
-        { name: 'Jul', value: 120 },
-        { name: 'Aug', value: 100 },
-        { name: 'Sep', value: 110 },
-        { name: 'Oct', value: 90 },
-        { name: 'Nov', value: 95 },
-        { name: 'Dec', value: 105 },
-      ]
-    },
-    tableTitle: "Active Referrers",
-    tableHeaders: ["Referrer ID", "Referee Views", "Sign Ups", "Rewards ($)", "Currency"]
-  }
+  const referrerPercentage = [
+    { month: 'Jan', percentage: 12.5 },
+    { month: 'Feb', percentage: 13.2 },
+    { month: 'Mar', percentage: 14.1 },
+    { month: 'Apr', percentage: 14.8 },
+    { month: 'May', percentage: 15.5 },
+    { month: 'Jun', percentage: 16.2 },
+    { month: 'Jul', percentage: 16.8 },
+    { month: 'Aug', percentage: 17.5 },
+    { month: 'Sep', percentage: 18.1 },
+    { month: 'Oct', percentage: 18.7 },
+    { month: 'Nov', percentage: 19.3 },
+    { month: 'Dec', percentage: 20.0 }
+  ]
 
-  const inviteeData = {
-    visitors: {
-      total: 2800,
-      weekly: 40,
-      label: "Invitee Visits All Time"
-    },
-    sharers: {
-      total: 980,
-      weekly: 15,
-      label: "Converted Invitees All Time"
-    },
-    monthlyChart: {
-      title: "Monthly Invitee Visits",
-      description: "Invitees who clicked on a referral link",
-      data: [
-        { name: 'Jan', value: 85 },
-        { name: 'Feb', value: 95 },
-        { name: 'Mar', value: 110 },
-        { name: 'Apr', value: 95 },
-        { name: 'May', value: 120 },
-        { name: 'Jun', value: 140 },
-        { name: 'Jul', value: 125 },
-        { name: 'Aug', value: 115 },
-        { name: 'Sep', value: 130 },
-        { name: 'Oct', value: 110 },
-        { name: 'Nov', value: 125 },
-        { name: 'Dec', value: 135 },
-      ]
-    },
-    activeChart: {
-      title: "Monthly Converted Invitees",
-      description: "Invitees who signed up through a referral",
-      data: [
-        { name: 'Jan', value: 65 },
-        { name: 'Feb', value: 75 },
-        { name: 'Mar', value: 85 },
-        { name: 'Apr', value: 95 },
-        { name: 'May', value: 75 },
-        { name: 'Jun', value: 85 },
-        { name: 'Jul', value: 105 },
-        { name: 'Aug', value: 85 },
-        { name: 'Sep', value: 95 },
-        { name: 'Oct', value: 75 },
-        { name: 'Nov', value: 80 },
-        { name: 'Dec', value: 90 },
-      ]
-    },
-    tableTitle: "Recent Invitees",
-    tableHeaders: ["Invitee ID", "Referrer", "Sign Up Date", "Reward Claimed", "Currency"]
-  }
+  const avgSharesPerUser = [
+    { month: 'Jan', average: 2.1 },
+    { month: 'Feb', average: 2.3 },
+    { month: 'Mar', average: 2.4 },
+    { month: 'Apr', average: 2.6 },
+    { month: 'May', average: 2.7 },
+    { month: 'Jun', average: 2.9 },
+    { month: 'Jul', average: 3.0 },
+    { month: 'Aug', average: 3.2 },
+    { month: 'Sep', average: 3.3 },
+    { month: 'Oct', average: 3.4 },
+    { month: 'Nov', average: 3.5 },
+    { month: 'Dec', average: 3.6 }
+  ]
 
-  const currentData = view === 'referrer' ? referrerData : inviteeData
+  const successfulShares = [
+    { month: 'Jan', successful: 350 },
+    { month: 'Feb', successful: 420 },
+    { month: 'Mar', successful: 480 },
+    { month: 'Apr', successful: 550 },
+    { month: 'May', successful: 620 },
+    { month: 'Jun', successful: 700 },
+    { month: 'Jul', successful: 750 },
+    { month: 'Aug', successful: 820 },
+    { month: 'Sep', successful: 900 },
+    { month: 'Oct', successful: 950 },
+    { month: 'Nov', successful: 1000 },
+    { month: 'Dec', successful: 1100 }
+  ]
+
+  const conversionData = [
+    { stage: 'Shares', value: 3500, dropoff: '0%' },
+    { stage: 'Link Clicks', value: 2800, dropoff: '-20%' },
+    { stage: 'Sign Ups', value: 1800, dropoff: '-36%' },
+    { stage: 'Activations', value: 1525, dropoff: '-15%' }
+  ]
+
+  const rawData = [
+    { timestamp: '3/1/2024, 9:15:00 AM', referrerId: 'USR001', inviteeId: 'INV001', event: 'Share', campaignId: 'CAMP001' },
+    { timestamp: '3/1/2024, 9:15:00 AM', referrerId: 'USR001', inviteeId: 'INV002', event: 'Link Click', campaignId: 'CAMP001' },
+    { timestamp: '3/1/2024, 9:15:00 AM', referrerId: 'USR002', inviteeId: 'INV003', event: 'Sign Up', campaignId: 'CAMP002' },
+  ]
 
   return (
     <SidebarProvider>
@@ -238,7 +123,7 @@ export default function AnalyticsPage() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/">
-                <Home className="h-4 w-4" />
+                  <Home className="h-4 w-4" />
                   Home
                 </Link>
               </SidebarMenuItem>
@@ -252,178 +137,288 @@ export default function AnalyticsPage() {
             <SidebarMenuSub>
               <SidebarMenuItem className="text-gray-500">Dev Setup</SidebarMenuItem>
               <SidebarMenuSubItem>
-                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="#">
+                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/access-keys">
                   <Key className="h-4 w-4" />
                   Access Keys
                 </Link>
               </SidebarMenuSubItem>
               <SidebarMenuSubItem>
-                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="#">
+                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/integrations">
                   <Link2 className="h-4 w-4" />
                   Integrations
                 </Link>
               </SidebarMenuSubItem>
-            </SidebarMenuSub>
-            <SidebarMenuSub>
-              <SidebarMenuItem className="text-gray-500">Resources</SidebarMenuItem>
               <SidebarMenuSubItem>
-                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="#">
-                  <ListChecks className="h-4 w-4" />
-                  Launch Checklist
+                <Link 
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" 
+                  href="https://docs.withflock.com/introduction"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Dev Docs
                 </Link>
               </SidebarMenuSubItem>
             </SidebarMenuSub>
           </SidebarContent>
         </Sidebar>
-
-        <main className="flex-1 overflow-y-auto">
-          <div className="flex flex-col gap-6 p-6">
-            {/* Analytics Header */}
-            <div className="space-y-6">
+        <main className="flex-1 overflow-y-auto bg-background p-6">
+          <div className="p-6 space-y-6">
+            <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight">Analytics</h2>
+                <h1 className="text-2xl font-semibold">Analytics</h1>
+                <p className="text-muted-foreground">Track your referral program performance</p>
               </div>
+              <div className="flex space-x-4">
+                <Select value={campaign} onValueChange={setCampaign}>
+                  <SelectTrigger className="w-48 border rounded-lg">
+                    <SelectValue placeholder="Select Campaign" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Campaign #1">Campaign #1</SelectItem>
+                    <SelectItem value="Campaign #2">Campaign #2</SelectItem>
+                  </SelectContent>
+                </Select>
 
-              <div className="flex items-center gap-4">
-                <div className="flex-1">
-                  <Tabs value={view} onValueChange={(value) => setView(value as 'referrer' | 'invitee')} className="w-[400px]">
-                    <TabsList>
-                      <TabsTrigger value="referrer" className="flex-1">Referrer</TabsTrigger>
-                      <TabsTrigger value="invitee" className="flex-1">Invitee</TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <Select defaultValue="campaign1">
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select campaign" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="campaign1">Campaign #1</SelectItem>
-                      <SelectItem value="campaign2">Campaign #2</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Select defaultValue="6months">
-                    <SelectTrigger className="w-[240px]">
-                      <SelectValue placeholder="Select timeframe" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="6months">Last 6 Months by Week</SelectItem>
-                      <SelectItem value="3months">Last 3 Months by Week</SelectItem>
-                      <SelectItem value="1month">Last Month by Day</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <Select value={timeRange} onValueChange={setTimeRange}>
+                  <SelectTrigger className="w-64 border rounded-lg">
+                    <SelectValue placeholder="Select Time Range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1m">Last Month by Day</SelectItem>
+                    <SelectItem value="3m">Last 3 Months by Week</SelectItem>
+                    <SelectItem value="12m">Last 12 Months by Month</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {currentData.visitors.label}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{currentData.visitors.total.toLocaleString()}</div>
-                  <div className="flex items-center text-xs text-muted-foreground">
-                    <span className="text-emerald-500">+{currentData.visitors.weekly}</span>
-                    <span className="ml-1">this week</span>
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="shadow-sm rounded-md">
+                <CardContent className="pt-6">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-semibold">Successful Referrals</h3>
+                    <div className="flex items-baseline space-x-3">
+                      <span className="text-4xl font-bold">1,525</span>
+                      <span className="text-emerald-600">+20 this week</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {currentData.sharers.label}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{currentData.sharers.total.toLocaleString()}</div>
-                  <div className="flex items-center text-xs text-muted-foreground">
-                    <span className="text-emerald-500">+{currentData.sharers.weekly}</span>
-                    <span className="ml-1">this week</span>
+              <Card className="shadow-sm rounded-md">
+                <CardContent className="pt-6">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-semibold">Total Shares</h3>
+                    <div className="flex items-baseline space-x-3">
+                      <span className="text-4xl font-bold">3,500</span>
+                      <span className="text-emerald-600">+50 this week</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm font-medium">{currentData.monthlyChart.title}</CardTitle>
-                  <p className="text-xs text-muted-foreground">
-                    {currentData.monthlyChart.description}
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <BarChart 
-                    data={currentData.monthlyChart.data}
-                    index="name"
-                    categories={["value"]}
-                    colors={["#10B981"]}
-                    height={300}
-                    valueFormatter={(value) => `${value}`}
-                    showGridLines={true}
-                    className="h-[300px]"
-                  />
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm font-medium">{currentData.activeChart.title}</CardTitle>
-                  <p className="text-xs text-muted-foreground">
-                    {currentData.activeChart.description}
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <BarChart 
-                    data={currentData.activeChart.data}
-                    index="name"
-                    categories={["value"]}
-                    colors={["#6366F1"]}
-                    height={300}
-                    valueFormatter={(value) => `${value}`}
-                    showGridLines={true}
-                    className="h-[300px]"
-                  />
-                </CardContent>
-              </Card>
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold">Sharing</h2>
+              <div className="space-y-6">
+                <Card className="shadow-sm rounded-md">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Total Shares</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[250px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={sharesOverTime}>
+                          <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                          <XAxis dataKey="month" />
+                          <YAxis />
+                          <Tooltip 
+                            content={({ active, payload }) => {
+                              if (!active || !payload?.length) return null
+                              return (
+                                <div className="bg-background border rounded-lg shadow-sm p-2">
+                                  <p className="font-medium">{payload[0].value} shares</p>
+                                </div>
+                              )
+                            }}
+                          />
+                          <Bar dataKey="shares" fill="#10b981" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <Card className="shadow-sm rounded-md">
+                    <CardHeader>
+                      <CardTitle className="text-lg">% of Users Who Share</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-[250px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={referrerPercentage}>
+                            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                            <XAxis dataKey="month" />
+                            <YAxis />
+                            <Tooltip 
+                              content={({ active, payload }) => {
+                                if (!active || !payload?.length) return null
+                                return (
+                                  <div className="bg-background border rounded-lg shadow-sm p-2">
+                                    <p className="font-medium">{payload[0].value}%</p>
+                                  </div>
+                                )
+                              }}
+                            />
+                            <Bar dataKey="percentage" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="shadow-sm rounded-md">
+                    <CardHeader>
+                      <CardTitle className="text-lg">Average Shares per User</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-[250px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={avgSharesPerUser}>
+                            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                            <XAxis dataKey="month" />
+                            <YAxis />
+                            <Tooltip 
+                              content={({ active, payload }) => {
+                                if (!active || !payload?.length) return null
+                                return (
+                                  <div className="bg-background border rounded-lg shadow-sm p-2">
+                                    <p className="font-medium">{payload[0].value} shares</p>
+                                  </div>
+                                )
+                              }}
+                            />
+                            <Bar dataKey="average" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
             </div>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-medium">{currentData.tableTitle}</CardTitle>
-                <Button variant="outline" size="sm">
-                  <Download className="mr-2 h-4 w-4" />
-                  Download
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold">Conversions</h2>
+              <div className="grid grid-cols-2 gap-4">
+                <Card className="shadow-sm rounded-md">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Activation Funnel</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[250px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={conversionData} layout="vertical">
+                          <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                          <XAxis type="number" />
+                          <YAxis type="category" dataKey="stage" width={100} />
+                          <Tooltip 
+                            content={({ payload }) => {
+                              if (!payload?.length) return null
+                              const data = payload[0].payload
+                              return (
+                                <div className="bg-background p-2 border rounded-lg shadow-sm">
+                                  <div className="font-medium">{data.stage}</div>
+                                  <div>Count: {data.value}</div>
+                                  <div>Drop-off: {data.dropoff}</div>
+                                </div>
+                              )
+                            }}
+                          />
+                          <Bar dataKey="value" fill="#10b981" radius={[0, 4, 4, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="shadow-sm rounded-md">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Successful Referrals</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[250px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={successfulShares}>
+                          <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                          <XAxis dataKey="month" />
+                          <YAxis />
+                          <Tooltip 
+                            content={({ active, payload }) => {
+                              if (!active || !payload?.length) return null
+                              return (
+                                <div className="bg-background border rounded-lg shadow-sm p-2">
+                                  <p className="font-medium">{payload[0].value} referrals</p>
+                                </div>
+                              )
+                            }}
+                          />
+                          <Bar dataKey="successful" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold">Customers</h2>
+                <Button variant="outline" className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add
                 </Button>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      {currentData.tableHeaders.map((header, index) => (
-                        <TableHead key={index} className={index > 0 ? "text-right" : ""}>{header}</TableHead>
-                      ))}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell className="font-mono">{view === 'referrer' ? '1ba31a98...' : '2cb42b87...'}</TableCell>
-                        <TableCell className="text-right">{view === 'referrer' ? '310' : 'John Doe'}</TableCell>
-                        <TableCell className="text-right">{view === 'referrer' ? '27' : '2023-11-15'}</TableCell>
-                        <TableCell className="text-right">100</TableCell>
-                        <TableCell className="text-right">USD</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+              </div>
+              <p className="text-muted-foreground">
+                List of all actives users who have been registered with your Referral Program
+              </p>
+              <Card className="shadow-sm rounded-md">
+                <CardContent className="p-0">
+                  <div className="relative overflow-x-auto">
+                    <table className="w-full text-sm text-left">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="px-6 py-3">Created</th>
+                          <th className="px-6 py-3">Name</th>
+                          <th className="px-6 py-3">Email</th>
+                          <th className="px-6 py-3">User ID</th>
+                          <th className="px-6 py-3">Referral Code</th>
+                          <th className="px-6 py-3">Referred By</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="px-6 py-8 text-center text-muted-foreground" colSpan={6}>
+                            Add customers manually or in your code to get started.
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="flex items-center justify-between border-t px-6 py-3">
+                    <Button variant="ghost" disabled>
+                      Previous
+                    </Button>
+                    <div>1</div>
+                    <Button variant="ghost" disabled>
+                      Next
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </main>
       </div>

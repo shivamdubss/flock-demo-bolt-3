@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/sidebar"
 import {
   BarChart2,
+  BookOpen,
   Home,
   Key,
   Link2,
@@ -33,7 +35,6 @@ import {
 } from "lucide-react"
 import { useCampaignStore } from "@/lib/campaign-store"
 import { LoadingSpinner } from "@/components/loading-spinner"
-import { useState, useEffect } from "react"
 
 export default function HomePage() {
   const router = useRouter()
@@ -42,29 +43,22 @@ export default function HomePage() {
   const { campaigns, addCampaign, setCampaignName } = useCampaignStore()
 
   useEffect(() => {
-    // Let the initial render complete before showing content
     setIsReady(true)
   }, [])
 
   const handleCreateCampaign = async () => {
     setIsCreating(true)
-    setIsReady(false) // Prevent content flash
+    setIsReady(false)
     const defaultName = `Campaign #${campaigns.length + 1}`
-
-    // Set campaign name and add campaign
     setCampaignName(defaultName)
     addCampaign(defaultName)
-
-    // Navigate after store updates
     router.push('/campaign-builder')
   }
 
-  // Show loading spinner while creating
   if (isCreating) {
     return <LoadingSpinner isLoading={true} />
   }
 
-  // Don't render content until ready
   if (!isReady) {
     return null
   }
@@ -108,53 +102,37 @@ export default function HomePage() {
                 </Link>
               </SidebarMenuSubItem>
               <SidebarMenuSubItem>
-                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="#">
+                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/integrations">
                   <Link2 className="h-4 w-4" />
                   Integrations
                 </Link>
               </SidebarMenuSubItem>
-            </SidebarMenuSub>
-            <SidebarMenuSub>
-              <SidebarMenuItem className="text-gray-500">Resources</SidebarMenuItem>
               <SidebarMenuSubItem>
-                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="#">
-                  <ListChecks className="h-4 w-4" />
-                  Launch Checklist
+                <Link 
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" 
+                  href="https://docs.withflock.com/introduction"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Dev Docs
                 </Link>
               </SidebarMenuSubItem>
             </SidebarMenuSub>
           </SidebarContent>
         </Sidebar>
 
-        <main className="flex-1 overflow-y-auto bg-background">
-          {campaigns.length === 0 ? (
-            <div className="flex min-h-[600px] flex-col items-center justify-center gap-2 p-4 md:gap-0 md:p-6">
-              <Image
-                src="https://484zd26nhzbahsul.public.blob.vercel-storage.com/Frame%20184716%20(2)-Lj4iJzVzQS8U8dm0jlT368f48hY1az.svg"
-                width={500}
-                height={500}
-                alt="Flock media icons"
-                className="mb-4"
-              />
-              <Button 
-                className="bg-emerald-600 hover:bg-emerald-600/90"
-                onClick={handleCreateCampaign}
-                disabled={isCreating}
-              >
-                {isCreating ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating...
-                  </>
-                ) : (
-                  'Create a campaign'
-                )}
-              </Button>
-            </div>
-          ) : (
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-semibold">Campaigns</h1>
+        <main className="flex-1 overflow-y-auto bg-background p-6">
+          <div className="p-6 space-y-6">
+            {campaigns.length === 0 ? (
+              <div className="flex min-h-[600px] flex-col items-center justify-center gap-2 p-4 md:gap-0 md:p-6">
+                <Image
+                  src="https://484zd26nhzbahsul.public.blob.vercel-storage.com/Frame%20184716%20(2)-Lj4iJzVzQS8U8dm0jlT368f48hY1az.svg"
+                  width={500}
+                  height={500}
+                  alt="Flock media icons"
+                  className="mb-4"
+                />
                 <Button 
                   className="bg-emerald-600 hover:bg-emerald-600/90"
                   onClick={handleCreateCampaign}
@@ -166,44 +144,69 @@ export default function HomePage() {
                       Creating...
                     </>
                   ) : (
-                    'New'
+                    'Create a campaign'
                   )}
                 </Button>
               </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h1 className="text-2xl font-semibold">Campaigns</h1>
+                    <p className="text-muted-foreground">Manage your referral campaigns</p>
+                  </div>
+                  <Button 
+                    className="bg-emerald-600 hover:bg-emerald-600/90"
+                    onClick={handleCreateCampaign}
+                    disabled={isCreating}
+                  >
+                    {isCreating ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creating...
+                      </>
+                    ) : (
+                      'New'
+                    )}
+                  </Button>
+                </div>
 
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>NAME</TableHead>
-                    <TableHead>STATUS</TableHead>
-                    <TableHead>CREATED</TableHead>
-                    <TableHead className="text-right">REFERRALS</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {campaigns.map((campaign) => (
-                    <TableRow 
-                      key={campaign.id} 
-                      className="cursor-pointer hover:bg-gray-50" 
-                      onClick={() => router.push(`/campaign-builder/${campaign.id}`)}
-                    >
-                      <TableCell>{campaign.name}</TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant={campaign.status === 'live' ? 'success' : 'secondary'}
-                          className="capitalize"
+                <div className="space-y-6">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>NAME</TableHead>
+                        <TableHead>STATUS</TableHead>
+                        <TableHead>CREATED</TableHead>
+                        <TableHead className="text-right">REFERRALS</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {campaigns.map((campaign) => (
+                        <TableRow 
+                          key={campaign.id} 
+                          className="cursor-pointer hover:bg-accent"
+                          onClick={() => router.push(`/campaign-builder/${campaign.id}`)}
                         >
-                          {campaign.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{new Date(campaign.created).toLocaleDateString()}</TableCell>
-                      <TableCell className="text-right">{campaign.referrals}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
+                          <TableCell>{campaign.name}</TableCell>
+                          <TableCell>
+                            <Badge 
+                              variant={campaign.status === 'live' ? 'success' : 'secondary'}
+                              className="capitalize"
+                            >
+                              {campaign.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{new Date(campaign.created).toLocaleDateString()}</TableCell>
+                          <TableCell className="text-right">{campaign.referrals}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
+            )}
+          </div>
         </main>
       </div>
     </SidebarProvider>

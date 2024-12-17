@@ -27,6 +27,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { CampaignLayout } from "@/components/campaign-layout"
+import { PreviewPanel } from "@/components/preview-panel"
 
 interface ComponentType {
   id: string
@@ -642,140 +643,74 @@ export default function Customize() {
   }
 
   return (
-    <>
-      <CampaignLayout currentStep="how-it-looks">
-        <div className="flex flex-col h-screen">
-          <CampaignHeader 
-            campaignTitle={campaignTitle}
-            onTitleChange={setCampaignTitle}
-          />
-          <div className="grid grid-cols-[363px_1fr_363px] divide-x flex-1">
-            {/* Layout Tree */}
-            <div className="overflow-y-auto">
-              <div className="p-6">
-                <div className="mb-6">
-                  <ToggleGroup
-                    type="single"
-                    value={selectedView}
-                    onValueChange={(value) => {
-                      if (value) setSelectedView(value)
-                    }}
-                    className="w-full border rounded-lg p-1 bg-gray-50"
-                  >
-                    <ToggleGroupItem
-                      value="referrer"
-                      className="flex-1 rounded-md px-3 py-1.5 text-sm font-medium"
-                    >
-                      Home
-                    </ToggleGroupItem>
-                    <ToggleGroupItem
-                      value="invitee"
-                      className="flex-1 rounded-md px-3 py-1.5 text-sm font-medium"
-                    >
-                      Code Input
-                    </ToggleGroupItem>
-                    <ToggleGroupItem
-                      value="inviteeSuccess"
-                      className="flex-1 rounded-md px-3 py-1.5 text-sm font-medium"
-                    >
-                      Success
-                    </ToggleGroupItem>
-                  </ToggleGroup>
-                </div>
-                <h2 className="mb-4 text-lg font-semibold">Layout</h2>
-                <div className="space-y-1">
-                  {renderComponentTree(components)}
-                </div>
-                <Button 
-                  variant="outline" 
-                  className="mt-6 w-full justify-center gap-2"
-                  onClick={() => setShowAddContainer(true)}
+    <CampaignLayout currentStep="how-it-looks">
+      <div className="grid grid-cols-[363px_1fr_363px] h-[calc(100vh-60px)]">
+        {/* Layout Tree */}
+        <div className="overflow-y-auto border-r">
+          <div className="p-6">
+            <div className="mb-6">
+              <ToggleGroup
+                type="single"
+                value={selectedView}
+                onValueChange={(value) => {
+                  if (value) setSelectedView(value)
+                }}
+                className="w-full border rounded-lg p-1 bg-gray-50"
+              >
+                <ToggleGroupItem
+                  value="referrer"
+                  className="flex-1 rounded-md px-3 py-1.5 text-sm font-medium"
                 >
-                  <Plus className="h-4 w-4" />
-                  Add Container
-                </Button>
-              </div>
+                  Home
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="invitee"
+                  className="flex-1 rounded-md px-3 py-1.5 text-sm font-medium"
+                >
+                  Code Input
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="inviteeSuccess"
+                  className="flex-1 rounded-md px-3 py-1.5 text-sm font-medium"
+                >
+                  Success
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
-
-            {/* Preview - Fixed Height Container */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative aspect-[390/844] w-[300px] overflow-hidden rounded-[38px] bg-white shadow-xl">
-                  <div className="absolute left-1/2 top-0 h-6 w-40 -translate-x-1/2 rounded-b-2xl bg-black"></div>
-                  <Image
-                    src={viewImages[selectedView as keyof typeof viewImages]}
-                    alt="Template preview"
-                    width={300}
-                    height={650}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              </div>
+            <h2 className="mb-4 text-lg font-semibold">Layout</h2>
+            <div className="space-y-1">
+              {renderComponentTree(components)}
             </div>
-
-            {/* Component Editor */}
-            <div className="overflow-y-auto">
-              <div className="p-6 sticky top-0 bg-white z-10">
-                <Link href="/campaign-builder/communications">
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-600/90">
-                    Continue
-                  </Button>
-                </Link>
-              </div>
-              <div className="px-6 pb-6">
-                {renderEditor()}
-              </div>
-            </div>
+            <Button 
+              variant="outline" 
+              className="mt-6 w-full justify-center gap-2"
+              onClick={() => setShowAddContainer(true)}
+            >
+              <Plus className="h-4 w-4" />
+              Add Container
+            </Button>
           </div>
         </div>
-      </CampaignLayout>
 
-      <Dialog open={showAddContainer} onOpenChange={setShowAddContainer}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Add Container</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="space-y-4">
-              <div>
-                <Label>Container Name</Label>
-                <Input type="text" placeholder="e.g. Header Section" className="mt-1.5" />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Rows</Label>
-                  <Input 
-                    type="number" 
-                    min="1"
-                    max="12"
-                    defaultValue="2"
-                    className="mt-1.5" 
-                  />
-                </div>
-                <div>
-                  <Label>Columns</Label>
-                  <Input 
-                    type="number"
-                    min="1"
-                    max="12"
-                    defaultValue="2"
-                    className="mt-1.5" 
-                  />
-                </div>
-              </div>
-            </div>
+        {/* Preview Panel */}
+        <PreviewPanel 
+          previewImage={viewImages[selectedView as keyof typeof viewImages]}
+        />
+
+        {/* Component Editor */}
+        <div className="overflow-y-auto border-l">
+          <div className="p-6 sticky top-0 bg-white z-10">
+            <Link href="/campaign-builder/communications">
+              <Button className="w-full bg-emerald-600 hover:bg-emerald-600/90">
+                Continue
+              </Button>
+            </Link>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAddContainer(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setShowAddContainer(false)}>
-              Add Grid
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+          <div className="px-6 pb-6">
+            {renderEditor()}
+          </div>
+        </div>
+      </div>
+    </CampaignLayout>
   )
 }

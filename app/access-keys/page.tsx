@@ -5,6 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -13,8 +14,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem } from "@/components/ui/sidebar"
-import { BarChart2, Copy, Eye, EyeOff, Home, Key, Link2, ListChecks } from "lucide-react"
+import { 
+  Sidebar, 
+  SidebarContent, 
+  SidebarHeader, 
+  SidebarMenu, 
+  SidebarMenuItem, 
+  SidebarMenuSub, 
+  SidebarMenuSubItem,
+  SidebarProvider 
+} from "@/components/ui/sidebar"
+import { BarChart2, BookOpen, Copy, Eye, EyeOff, Home, Key, Link2, ListChecks } from "lucide-react"
 
 export default function AccessKeysPage() {
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({
@@ -56,121 +66,130 @@ export default function AccessKeysPage() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
-    // You could add a toast notification here
   }
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar code remains the same */}
-      <Sidebar className="w-64 border-r">
-        {/* Reference to existing sidebar code */}
-        <SidebarHeader className="flex h-[60px] items-center justify-start border-b px-4">
-          <Link className="flex items-center" href="/">
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Group%208770%20(1)%201-kOBWph7wJ5hXISSOm5yJMHyPeH1VWp.png"
-              width={87}
-              height={24}
-              alt="Flock logo"
-              style={{ maxWidth: '100%', height: 'auto' }}
-            />
-          </Link>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/">
-                <Home className="h-4 w-4" />
-                Home
-              </Link>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/analytics">
-                <BarChart2 className="h-4 w-4" />
-                Analytics
-              </Link>
-            </SidebarMenuItem>
-          </SidebarMenu>
-          <SidebarMenuSub>
-            <SidebarMenuItem className="text-gray-500">Dev Setup</SidebarMenuItem>
-            <SidebarMenuSubItem>
-              <Link className="flex items-center gap-3 rounded-lg px-3 py-2 bg-accent text-black" href="/access-keys">
-                <Key className="h-4 w-4" />
-                Access Keys
-              </Link>
-            </SidebarMenuSubItem>
-            <SidebarMenuSubItem>
-              <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="#">
-                <Link2 className="h-4 w-4" />
-                Integrations
-              </Link>
-            </SidebarMenuSubItem>
-          </SidebarMenuSub>
-          <SidebarMenuSub>
-            <SidebarMenuItem className="text-gray-500">Resources</SidebarMenuItem>
-            <SidebarMenuSubItem>
-              <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="#">
-                <ListChecks className="h-4 w-4" />
-                Launch Checklist
-              </Link>
-            </SidebarMenuSubItem>
-          </SidebarMenuSub>
-        </SidebarContent>
-      </Sidebar>
+    <SidebarProvider>
+      <div className="flex h-screen">
+        <Sidebar className="w-64 border-r">
+          <SidebarHeader className="flex h-[60px] items-center justify-start border-b px-4">
+            <Link className="flex items-center" href="/">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Group%208770%20(1)%201-kOBWph7wJ5hXISSOm5yJMHyPeH1VWp.png"
+                width={87}
+                height={24}
+                alt="Flock logo"
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
+            </Link>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/">
+                  <Home className="h-4 w-4" />
+                  Home
+                </Link>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/analytics">
+                  <BarChart2 className="h-4 w-4" />
+                  Analytics
+                </Link>
+              </SidebarMenuItem>
+            </SidebarMenu>
+            <SidebarMenuSub>
+              <SidebarMenuItem className="text-gray-500">Dev Setup</SidebarMenuItem>
+              <SidebarMenuSubItem>
+                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 bg-accent text-black" href="/access-keys">
+                  <Key className="h-4 w-4" />
+                  Access Keys
+                </Link>
+              </SidebarMenuSubItem>
+              <SidebarMenuSubItem>
+                <Link className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" href="/integrations">
+                  <Link2 className="h-4 w-4" />
+                  Integrations
+                </Link>
+              </SidebarMenuSubItem>
+              <SidebarMenuSubItem>
+                <Link 
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-black hover:bg-accent" 
+                  href="https://docs.withflock.com/introduction"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Dev Docs
+                </Link>
+              </SidebarMenuSubItem>
+            </SidebarMenuSub>
+          </SidebarContent>
+        </Sidebar>
 
-      <main className="flex-1 overflow-y-auto p-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold">Access Keys</h1>
-          <p className="text-gray-600">API Keys and Secrets that let you access Flock resources</p>
-        </div>
+        <main className="flex-1 overflow-y-auto bg-background p-6">
+          <div className="p-6 space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="text-2xl font-semibold">Access Keys</h1>
+                <p className="text-muted-foreground">API Keys and Secrets that let you access Flock resources</p>
+              </div>
+            </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[200px]">NAME</TableHead>
-              <TableHead>KEY</TableHead>
-              <TableHead>DESCRIPTION</TableHead>
-              <TableHead className="w-[100px]">ACTIONS</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {keys.map((key) => (
-              <TableRow key={key.id}>
-                <TableCell>
-                  {key.badge}
-                </TableCell>
-                <TableCell className="font-mono">
-                  {showSecrets[key.id] ? key.value : '•'.repeat(40)}
-                </TableCell>
-                <TableCell className="text-gray-500">
-                  {key.description}
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => toggleVisibility(key.id)}
-                    >
-                      {showSecrets[key.id] ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => copyToClipboard(key.value)}
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </main>
-    </div>
+            <Card className="shadow-sm rounded-md">
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[200px]">NAME</TableHead>
+                      <TableHead>KEY</TableHead>
+                      <TableHead>DESCRIPTION</TableHead>
+                      <TableHead className="w-[100px]">ACTIONS</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {keys.map((key) => (
+                      <TableRow key={key.id}>
+                        <TableCell>
+                          {key.badge}
+                        </TableCell>
+                        <TableCell className="font-mono">
+                          {showSecrets[key.id] ? key.value : '•'.repeat(40)}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {key.description}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => toggleVisibility(key.id)}
+                            >
+                              {showSecrets[key.id] ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => copyToClipboard(key.value)}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
   )
 } 

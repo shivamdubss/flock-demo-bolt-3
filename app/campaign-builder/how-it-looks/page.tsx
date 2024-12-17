@@ -7,14 +7,13 @@ import { useRouter } from "next/navigation"
 import { ChevronRight, CheckCircle2, Smartphone, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { CampaignHeader } from "@/components/campaign-header"
+import { CampaignLayout } from "@/components/campaign-layout"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { CampaignLayout } from "@/components/campaign-layout"
 
 interface Template {
   id: string
@@ -50,7 +49,6 @@ const templates: Template[] = [
 
 export default function HowItLooks() {
   const router = useRouter()
-  const [campaignTitle, setCampaignTitle] = useState("Campaign #1")
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -74,10 +72,6 @@ export default function HowItLooks() {
   return (
     <CampaignLayout currentStep="how-it-looks">
       <div className="flex-1">
-        <CampaignHeader 
-          campaignTitle={campaignTitle}
-          onTitleChange={setCampaignTitle}
-        />
 
         <div className="overflow-auto">
           <div className="mx-auto max-w-5xl p-6">

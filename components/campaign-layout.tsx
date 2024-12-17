@@ -2,11 +2,12 @@
 
 import Link from "next/link"
 import { CheckCircle2 } from "lucide-react"
-import { useCampaignStore } from "@/lib/campaign-store"
+import { CampaignHeader } from "@/components/campaign-header"
+import { useCampaignStore } from "@/lib/stores/campaign"
 
 interface CampaignLayoutProps {
   children: React.ReactNode
-  currentStep: 'rewards' | 'how-it-looks' | 'referrer-journey' | 'referee-journey' | 'summary'
+  currentStep: 'rewards' | 'how-it-looks' | 'communications' | 'summary'
 }
 
 export function CampaignLayout({
@@ -25,35 +26,39 @@ export function CampaignLayout({
   const currentStepIndex = steps.findIndex(step => step.id === currentStep)
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left Sidebar */}
-      <div className="w-64 border-r bg-gray-50/40">
-        <nav className="space-y-2 p-4">
-          <div className="space-y-1">
-            {steps.map((step, index) => {
-              const isCompleted = currentStepIndex > index
-              const isCurrent = step.id === currentStep
+    <div className="flex flex-col h-screen">
+      <CampaignHeader 
+        campaignTitle={campaignName}
+        onTitleChange={setCampaignName}
+        className="border-b"
+      />
+      <div className="flex flex-1 overflow-hidden">
+        <div className="w-64 border-r bg-gray-50/40">
+          <nav className="space-y-2 p-4">
+            <div className="space-y-1">
+              {steps.map((step, index) => {
+                const isCompleted = currentStepIndex > index
+                const isCurrent = step.id === currentStep
 
-              return (
-                <Link
-                  key={step.id}
-                  className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-gray-100 ${
-                    isCurrent ? 'font-medium text-emerald-600' : 'text-gray-600'
-                  }`}
-                  href={step.href}
-                >
-                  {isCompleted && <CheckCircle2 className="h-4 w-4 text-emerald-600" />}
-                  {step.label}
-                </Link>
-              )
-            })}
-          </div>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1">
-        {children}
+                return (
+                  <Link
+                    key={step.id}
+                    className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-gray-100 ${
+                      isCurrent ? 'font-medium text-emerald-600' : 'text-gray-600'
+                    }`}
+                    href={step.href}
+                  >
+                    {isCompleted && <CheckCircle2 className="h-4 w-4 text-emerald-600" />}
+                    {step.label}
+                  </Link>
+                )
+              })}
+            </div>
+          </nav>
+        </div>
+        <div className="flex-1 overflow-auto">
+          {children}
+        </div>
       </div>
     </div>
   )

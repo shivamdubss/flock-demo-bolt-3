@@ -47,7 +47,7 @@ export function SidebarHeader({
   children: React.ReactNode
 }) {
   return (
-    <header className={cn("", className)}>
+    <header className={cn("flex h-[60px] items-center justify-start border-b px-4", className)}>
       {children}
     </header>
   )
@@ -61,23 +61,9 @@ export function SidebarContent({
   children: React.ReactNode
 }) {
   return (
-    <div className={cn("flex-1 overflow-auto py-2", className)}>
+    <div className={cn("flex-1 overflow-auto p-4", className)}>
       {children}
     </div>
-  )
-}
-
-export function SidebarFooter({
-  className,
-  children,
-}: {
-  className?: string
-  children: React.ReactNode
-}) {
-  return (
-    <footer className={cn("", className)}>
-      {children}
-    </footer>
   )
 }
 
@@ -89,7 +75,7 @@ export function SidebarMenu({
   children: React.ReactNode
 }) {
   return (
-    <nav className={cn("px-2", className)}>
+    <nav className={cn("space-y-1", className)}>
       {children}
     </nav>
   )
@@ -103,7 +89,7 @@ export function SidebarMenuItem({
   children: React.ReactNode
 }) {
   return (
-    <div className={cn("text-sm font-medium text-muted-foreground", className)}>
+    <div className={cn("", className)}>
       {children}
     </div>
   )
@@ -117,7 +103,7 @@ export function SidebarMenuSub({
   children: React.ReactNode
 }) {
   return (
-    <div className={cn("mt-4 px-2", className)}>
+    <div className={cn("space-y-1 pt-6", className)}>
       {children}
     </div>
   )
@@ -131,7 +117,7 @@ export function SidebarMenuSubItem({
   children: React.ReactNode
 }) {
   return (
-    <div className={cn("text-sm", className)}>
+    <div className={cn("mt-1", className)}>
       {children}
     </div>
   )

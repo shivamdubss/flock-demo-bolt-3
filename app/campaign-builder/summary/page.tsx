@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
+import { CampaignLayout } from "@/components/campaign-layout"
 import dynamic from 'next/dynamic'
 const Dialog = dynamic(() => import('@/components/ui/dialog').then(mod => mod.Dialog), { ssr: false })
 const DialogContent = dynamic(() => import('@/components/ui/dialog').then(mod => mod.DialogContent), { ssr: false })
 const DialogHeader = dynamic(() => import('@/components/ui/dialog').then(mod => mod.DialogHeader), { ssr: false })
 const DialogTitle = dynamic(() => import('@/components/ui/dialog').then(mod => mod.DialogTitle), { ssr: false })
 import { Input } from "@/components/ui/input"
-import { CampaignHeader } from "@/components/campaign-header"
 import { 
   CheckCircle2, 
   ChevronDown, 
@@ -32,10 +32,9 @@ type Environment = {
   lastPublished: Date | null
 }
 
-export default function Summary() {
+export default function SummaryPage() {
   const router = useRouter()
   const [isClient, setIsClient] = useState(false)
-  const [campaignTitle, setCampaignTitle] = useState("Campaign #1")
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState("")
   const [environments, setEnvironments] = useState<Record<string, Environment>>({
@@ -190,143 +189,109 @@ export default function Summary() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left Sidebar */}
-      <div className="w-64 border-r bg-gray-50/40">
-        <nav className="space-y-2 p-4">
-          <div className="space-y-1">
-            {sections.map((section) => (
-              <Link
-                key={section.title}
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
-                href={section.href}
-              >
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                {section.title}
-              </Link>
-            ))}
-            <Link
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-emerald-600 hover:bg-gray-100"
-              href="#"
-            >
-              Summary
-            </Link>
-          </div>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        <CampaignHeader 
-          campaignTitle={campaignTitle}
-          onTitleChange={setCampaignTitle}
-          onClose={handleSaveAndClose}
-        />
-
-        {/* Content */}
-        <div className="flex-1 p-6 overflow-auto">
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <h1 className="text-2xl font-semibold">Summary</h1>
-              </div>
-              <div className="flex items-center gap-4">
-                <Button 
-                  className="bg-gray-600 text-white hover:bg-gray-700"
-                  onClick={() => setIsInviteDialogOpen(true)}
-                >
-                  Invite developers
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="secondary" 
-                      className="bg-gray-600 text-white hover:bg-gray-700"
-                      disabled={isAnyPublishing}
-                    >
-                      <Rocket className="mr-2 h-4 w-4" />
-                      Publish
-                      <ChevronDown className="ml-2 h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-80">
-                    <div className="px-4 py-3">
-                      <h3 className="text-lg font-semibold">Choose publish destination</h3>
-                    </div>
-                    <div className="space-y-4 p-4">
-                      {Object.entries(environments).map(([env, { selected, isPublishing, isPublished, lastPublished }]) => (
-                        <div key={env} className="space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox 
-                              id={env}
-                              checked={selected}
-                              onCheckedChange={() => toggleEnvironment(env)}
-                              disabled={isPublishing}
-                            />
-                            <label
-                              htmlFor={env}
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              {env.charAt(0).toUpperCase() + env.slice(1)}
-                            </label>
-                          </div>
-                          <div className="pl-6">
-                            {isPublished ? (
-                              <div className="flex items-center justify-between">
-                                <p className="text-sm text-green-600">Published {formatPublishTime(lastPublished)}</p>
-                                <Button
-                                  variant="link"
-                                  size="sm"
-                                  onClick={() => handleUnpublish(env)}
-                                  disabled={isPublishing}
-                                  className="text-red-600 hover:text-red-700"
-                                >
-                                  Unpublish
-                                </Button>
-                              </div>
-                            ) : (
-                              <p className="text-sm text-gray-500">Not published</p>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="border-t p-4">
-                      <Button 
-                        className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
-                        onClick={handlePublish}
-                        disabled={!isAnySelected || isAnyPublishing}
-                      >
-                        {isAnyPublishing ? "Publishing..." : "Publish"}
-                      </Button>
-                    </div>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+    <CampaignLayout currentStep="summary">
+      <div className="flex-1 p-6 overflow-auto">
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-semibold">Summary</h1>
             </div>
-
-            <div className="space-y-4">
-              {sections.map((section) => (
-                <Card key={section.title} className="p-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-medium">{section.title}</h2>
-                    <Link href={section.href}>
-                      <Button variant="ghost" size="icon">
-                        <PenSquare className="h-4 w-4" />
-                      </Button>
-                    </Link>
+            <div className="flex items-center gap-4">
+              <Button 
+                className="bg-gray-600 text-white hover:bg-gray-700"
+                onClick={() => setIsInviteDialogOpen(true)}
+              >
+                Invite developers
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="secondary" 
+                    className="bg-gray-600 text-white hover:bg-gray-700"
+                    disabled={isAnyPublishing}
+                  >
+                    <Rocket className="mr-2 h-4 w-4" />
+                    Publish
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-80">
+                  <div className="px-4 py-3">
+                    <h3 className="text-lg font-semibold">Choose publish destination</h3>
                   </div>
-                  <div className="mt-4 space-y-3">
-                    {section.content.map((item, index) => (
-                      <div key={index} className="space-y-1">
-                        <div className="text-sm text-gray-500">{item.label}</div>
-                        <div className="text-sm">{item.value}</div>
+                  <div className="space-y-4 p-4">
+                    {Object.entries(environments).map(([env, { selected, isPublishing, isPublished, lastPublished }]) => (
+                      <div key={env} className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={env}
+                            checked={selected}
+                            onCheckedChange={() => toggleEnvironment(env)}
+                            disabled={isPublishing}
+                          />
+                          <label
+                            htmlFor={env}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {env.charAt(0).toUpperCase() + env.slice(1)}
+                          </label>
+                        </div>
+                        <div className="pl-6">
+                          {isPublished ? (
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm text-green-600">Published {formatPublishTime(lastPublished)}</p>
+                              <Button
+                                variant="link"
+                                size="sm"
+                                onClick={() => handleUnpublish(env)}
+                                disabled={isPublishing}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                Unpublish
+                              </Button>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-gray-500">Not published</p>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
-                </Card>
-              ))}
+                  <div className="border-t p-4">
+                    <Button 
+                      className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
+                      onClick={handlePublish}
+                      disabled={!isAnySelected || isAnyPublishing}
+                    >
+                      {isAnyPublishing ? "Publishing..." : "Publish"}
+                    </Button>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
+          </div>
+
+          <div className="space-y-4">
+            {sections.map((section) => (
+              <Card key={section.title} className="p-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-medium">{section.title}</h2>
+                  <Link href={section.href}>
+                    <Button variant="ghost" size="icon">
+                      <PenSquare className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+                <div className="mt-4 space-y-3">
+                  {section.content.map((item, index) => (
+                    <div key={index} className="space-y-1">
+                      <div className="text-sm text-gray-500">{item.label}</div>
+                      <div className="text-sm">{item.value}</div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
@@ -373,6 +338,6 @@ export default function Summary() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </CampaignLayout>
   )
 }
