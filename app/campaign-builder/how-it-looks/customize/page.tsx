@@ -76,7 +76,7 @@ const StackEditor = () => (
       <div>
         <Label>Axis</Label>
         <Select defaultValue="horizontal">
-          <SelectTrigger>
+          <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -89,7 +89,7 @@ const StackEditor = () => (
       <div>
         <Label>Vertical</Label>
         <Select defaultValue="center">
-          <SelectTrigger>
+          <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -103,7 +103,7 @@ const StackEditor = () => (
       <div>
         <Label>Horizontal</Label>
         <Select defaultValue="left">
-          <SelectTrigger>
+          <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -135,11 +135,11 @@ const StackEditor = () => (
       <div>
         <Label>Wrap</Label>
         <Select defaultValue="nowrap">
-          <SelectTrigger>
+          <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="nowrap">Don't Wrap</SelectItem>
+            <SelectItem value="nowrap">No wrap</SelectItem>
             <SelectItem value="wrap">Wrap</SelectItem>
           </SelectContent>
         </Select>
@@ -241,8 +241,8 @@ const TextEditor = () => (
             <Label className="text-xs text-muted-foreground">Top</Label>
             <div className="flex items-center gap-1">
               <Input type="number" defaultValue="40" />
-              <Select defaultValue="px" className="w-20">
-                <SelectTrigger>
+              <Select defaultValue="px">
+                <SelectTrigger className="w-20">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -256,7 +256,7 @@ const TextEditor = () => (
             <Label className="text-xs text-muted-foreground">Right</Label>
             <div className="flex items-center gap-1">
               <Input type="number" defaultValue="0" />
-              <Select defaultValue="px" className="w-20">
+              <Select defaultValue="px">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -271,7 +271,7 @@ const TextEditor = () => (
             <Label className="text-xs text-muted-foreground">Bottom</Label>
             <div className="flex items-center gap-1">
               <Input type="number" defaultValue="0" />
-              <Select defaultValue="px" className="w-20">
+              <Select defaultValue="px">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -286,7 +286,7 @@ const TextEditor = () => (
             <Label className="text-xs text-muted-foreground">Left</Label>
             <div className="flex items-center gap-1">
               <Input type="number" defaultValue="0" />
-              <Select defaultValue="px" className="w-20">
+              <Select defaultValue="px">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -307,7 +307,7 @@ const TextEditor = () => (
             <Label className="text-xs text-muted-foreground">Top</Label>
             <div className="flex items-center gap-1">
               <Input type="number" defaultValue="0" />
-              <Select defaultValue="px" className="w-20">
+              <Select defaultValue="px">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -322,7 +322,7 @@ const TextEditor = () => (
             <Label className="text-xs text-muted-foreground">Right</Label>
             <div className="flex items-center gap-1">
               <Input type="number" defaultValue="0" />
-              <Select defaultValue="px" className="w-20">
+              <Select defaultValue="px">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -337,7 +337,7 @@ const TextEditor = () => (
             <Label className="text-xs text-muted-foreground">Bottom</Label>
             <div className="flex items-center gap-1">
               <Input type="number" defaultValue="0" />
-              <Select defaultValue="px" className="w-20">
+              <Select defaultValue="px">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -352,7 +352,7 @@ const TextEditor = () => (
             <Label className="text-xs text-muted-foreground">Left</Label>
             <div className="flex items-center gap-1">
               <Input type="number" defaultValue="0" />
-              <Select defaultValue="px" className="w-20">
+              <Select defaultValue="px">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
