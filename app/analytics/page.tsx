@@ -234,7 +234,7 @@ export default function ReferralDashboard() {
                           <YAxis />
                           <Tooltip 
                             content={({ active, payload }) => {
-                              if (!active || !payload?.length) return null
+                              if (!active || !payload || !payload[0]) return null
                               return (
                                 <div className="bg-background border rounded-lg shadow-sm p-2">
                                   <p className="font-medium">{payload[0].value} shares</p>
@@ -324,9 +324,10 @@ export default function ReferralDashboard() {
                           <XAxis type="number" />
                           <YAxis type="category" dataKey="stage" width={100} />
                           <Tooltip 
-                            content={({ payload }) => {
-                              if (!payload?.length) return null
+                            content={({ active, payload }) => {
+                              if (!active || !payload || !payload[0]) return null
                               const data = payload[0].payload
+                              if (!data) return null
                               return (
                                 <div className="bg-background p-2 border rounded-lg shadow-sm">
                                   <div className="font-medium">{data.stage}</div>
