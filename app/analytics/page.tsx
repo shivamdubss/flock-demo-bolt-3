@@ -294,7 +294,7 @@ export default function ReferralDashboard() {
                                 if (!active || !payload?.length) return null
                                 return (
                                   <div className="bg-background border rounded-lg shadow-sm p-2">
-                                    <p className="font-medium">{payload[0].value} shares</p>
+                                    <p className="font-medium">{payload[0].payload.average} shares per user</p>
                                   </div>
                                 )
                               }}
@@ -360,7 +360,7 @@ export default function ReferralDashboard() {
                               if (!active || !payload?.length) return null
                               return (
                                 <div className="bg-background border rounded-lg shadow-sm p-2">
-                                  <p className="font-medium">{payload[0].value} referrals</p>
+                                  <p className="font-medium">{payload[0].payload.successful} referrals</p>
                                 </div>
                               )
                             }}
